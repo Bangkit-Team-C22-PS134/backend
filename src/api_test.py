@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
 api = Api(app)
-model = models.load_model('resources/saved_model/my_model')
+model = models.load_model('../resources/saved_model/my_model')
 
 Videos = {}
 class Video(Resource):
