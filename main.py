@@ -1,42 +1,76 @@
-from flask import Flask, render_template,request, redirect
-from flask_restful import Api, Resource
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
-from keras import models
-
+# app.py
+# Required Imports
+import os
+from flask import Flask, request, jsonify
+from firebase_admin import credentials, firestore, initialize_app
+# Initialize Flask App
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-db = SQLAlchemy(app)
-api = Api(app)
-model = models.load_model('resources/saved_model/my_model')
+# Initialize Firestore DB
+cred = credentials.Certificate('key.json')
+default_app = initialize_app(cred)
+db = firestore.client()
+todo_ref = db.collection('todos')
+@app.route('/add', methods=['POST'])
+def create():
+    """
+        create() : Add document to Firestore collection with request body
+        Ensure you pass a custom ID as part of json body in post request
+        e.g. json={'id': '1', 'title': 'Write a blog post'}
+    """
+    try:
+        id = request.json['id']
+        todo_ref.document(id).set(request.json)
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
+@app.route('/list', methods=['GET'])
+def read():
+    """
+        read() : Fetches documents from Firestore collection as JSON
+        todo : Return document that matches query ID
+        all_todos : Return all documents
+    """
+    try:
+        # Check if ID was passed to URL query
+        todo_id = request.args.get('id')    
+        if todo_id:
+            todo = todo_ref.document(todo_id).get()
+            return jsonify(todo.to_dict()), 200
+        else:
+            all_todos = [doc.to_dict() for doc in todo_ref.stream()]
+            return jsonify(all_todos), 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
+@app.route('/update', methods=['POST', 'PUT'])
+def update():
+    """
+        update() : Update document in Firestore collection with request body
+        Ensure you pass a custom ID as part of json body in post request
+        e.g. json={'id': '1', 'title': 'Write a blog post today'}
+    """
+    try:
+        id = request.json['id']
+        todo_ref.document(id).update(request.json)
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
 
-Videos = {}
-class Video(Resource):
-    def get(self, id):
-        return Videos[id]
-    def post(self):
-        return ""
+@app.route('/')
+def default():
+    return "Hello"
 
-api.add_resource(Video, "/helloworld/<string:name>")
-
-class Todo(db.Model):
-    id = db.Column(db.Integer , primary_key = True)
-    content = db.Column(db.String(200), nullable=False)
-    date_created = db.Column(db.DateTime, default = datetime.utcnow())
-
-    def __repr__(self):
-        return  '<Task %r>'% self.id
-
-@app.route('/', methods=['POST', 'GET'])
-def index():
-    return str("hello")
-
-@app.route('/<float:prediction>', methods=['POST', 'GET'])
-def predict_page(prediction):
-    prediction_result = model.predict([float(prediction)])
-    return str(prediction_result)
-
-
-if __name__ == "__main__":
-    app.run(debug=True) #dont run debug true if its in production
-
+@app.route('/delete', methods=['GET', 'DELETE'])
+def delete():
+    """
+        delete() : Delete a document from Firestore collection
+    """
+    try:
+        # Check for ID in URL query
+        todo_id = request.args.get('id')
+        todo_ref.document(todo_id).delete()
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
+port = int(os.environ.get('PORT', 8080))
+if __name__ == '__main__':
+    app.run(threaded=True, host='0.0.0.0', port=port)
