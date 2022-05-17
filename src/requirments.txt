@@ -1,0 +1,10 @@
+Flask
+itsdangerous
+Jinja2
+MarkupSafe
+Werkzeug
+click
+colorama
+tensorflow
+flask_restful
+gunicorn
