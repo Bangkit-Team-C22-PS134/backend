@@ -1,5 +1,9 @@
 From python:3.9
 
+COPY src/ app/src/
+COPY resources/ app/resources/
+COPY src/key.json app/src/
+
 RUN pip install Flask
 RUN pip install itsdangerous
 RUN pip install Jinja2
@@ -12,10 +16,8 @@ RUN pip install gunicorn
 RUN pip install firebase_admin
 RUN pip install tensorflow
 
-COPY src/ app/
-COPY resources/ app/
 
-WORKDIR /app
+WORKDIR /app/src
 
 ENV PORT 8080
 

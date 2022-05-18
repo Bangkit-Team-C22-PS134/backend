@@ -32,7 +32,7 @@ def read():
     """
     try:
         # Check if ID was passed to URL query
-        todo_id = request.args.get('id')    
+        todo_id = request.args.get('id')
         if todo_id:
             todo = todo_ref.document(todo_id).get()
             return jsonify(todo.to_dict()), 200

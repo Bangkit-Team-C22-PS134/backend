@@ -1,31 +1,62 @@
-from flask import Flask, render_template,request, redirect
-from flask_restful import Api, Resource
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, jsonify
+from flask_restful import Api, Resource, reqparse, abort
+
 from datetime import datetime
-from keras import models
+#from keras import models
+from firebase_admin import credentials, firestore, initialize_app
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-db = SQLAlchemy(app)
 api = Api(app)
-model = models.load_model('../resources/saved_model/my_model')
+#this set up ML model
+#model = models.load_model('../resources/saved_model/my_model')
 
+#this set up firestore auth and client
+cred = credentials.Certificate('key.json')
+default_app = initialize_app(cred)
+db = firestore.client()
+db_ref = db.collection('Videos')
+
+video_post_args = reqparse.RequestParser()
+video_post_args.add_argument("name", type=str, help="Name of the video is required", required=True)
+video_post_args.add_argument("likes", type=int, help="Likes on the video is required", required=True)
+video_post_args.add_argument("views", type=int, help="Views of the video is required", required=True)
 Videos = {}
+
+def abort_if_video_id_doesnt_exist(id):
+    print(db_ref.document(id).exist())
+    if(not db_ref.document(id).exist()):
+        abort(404 , message="Could not find the video...")
+
+def abort_if_video_exists(id):
+    if(db_ref.document(id).exist()):
+        abort(409, message="Video already exists with that ID...")
+
 class Video(Resource):
     def get(self, id):
-        return Videos[id]
-    def post(self):
-        return ""
+        print(db_ref.document(id).exist())
+        abort_if_video_id_doesnt_exist(id)
+        return jsonify(db_ref.document(id)), 200
 
-api.add_resource(Video, "/helloworld/<string:name>")
+    def post(self, id):
+        abort_if_video_exists(id)
+        args = video_post_args.parse_args()
+        try:
+            db_ref.document(id).set(args)
+            return jsonify({"success": True}), 200
+        except Exception as e:
+            return jsonify({"message": f"An Error Occured: {e}"}), 500
 
-class Todo(db.Model):
-    id = db.Column(db.Integer , primary_key = True)
-    content = db.Column(db.String(200), nullable=False)
-    date_created = db.Column(db.DateTime, default = datetime.utcnow())
+        Videos[id] = args
+        return Videos[id], 201
 
-    def __repr__(self):
-        return  '<Task %r>'% self.id
+    def delete(self, id):
+        abort_if_video_id_doesnt_exist(id)
+        del Videos[id]
+        return '', 204
+
+api.add_resource(Video, "/video/<int:id>")
+
+
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
