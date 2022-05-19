@@ -23,6 +23,7 @@ def create():
         return jsonify({"success": True}), 200
     except Exception as e:
         return f"An Error Occured: {e}"
+
 @app.route('/list', methods=['GET'])
 def read():
     """
