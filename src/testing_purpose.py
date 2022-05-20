@@ -1,7 +1,7 @@
 import requests
 
 
-BASE = "http://127.0.0.1:5000/"
+BASE = "http://127.0.0.1:5000/api/v1/"
 
 data = {
 
@@ -12,6 +12,5 @@ data = {
 
 }
 
-print(data["api_key"])
-response = requests.post(BASE + "video/3", data )
+response = requests.get(BASE + "video/3", data)
 print(response.json())

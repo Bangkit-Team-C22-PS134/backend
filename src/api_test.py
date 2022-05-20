@@ -1,12 +1,11 @@
 from flask import Flask, jsonify, json
 from flask_restful import Api, Resource, reqparse, abort
-
-from datetime import datetime
+import threading
 #from keras import models
 from firebase_admin import credentials, firestore, initialize_app
 
 app = Flask(__name__)
-api = Api(app)
+api = Api(app, prefix='/api/v1')
 #this set up ML model
 #model = models.load_model('../resources/saved_model/my_model')
 
@@ -15,13 +14,35 @@ cred = credentials.Certificate('key.json')
 default_app = initialize_app(cred)
 db = firestore.client()
 db_ref = db.collection('Videos')
+db_key = db.collection('api_keys').document("matching_setting_api_keys")
 
+#this set up the api resources and request json
 video_post_args = reqparse.RequestParser()
 video_post_args.add_argument("name", type=str, help="Name of the video is required", required=True)
 video_post_args.add_argument("likes", type=int, help="Likes on the video is required", required=True)
 video_post_args.add_argument("views", type=int, help="Views of the video is required", required=True)
 video_post_args.add_argument("api_key", type=str , help="Api_keys is needed to post a video", required = True)
 Videos = {}
+
+
+video_auth_args = reqparse.RequestParser()
+video_auth_args.add_argument("api_key", type=str , help="Api_keys is needed", required = True)
+
+#this set up firebase listening document for changes in api_keys
+
+# Create an Event for notifying main thread.
+callback_done = threading.Event()
+
+# Create a callback on_snapshot function to capture changes
+def on_snapshot(doc_snapshot, changes, read_time):
+    global api_key
+    for doc in doc_snapshot:
+        api_key = doc.get("api_key")
+    callback_done.set()
+
+doc_ref = db_key
+# Watch the document
+doc_watch = doc_ref.on_snapshot(on_snapshot)
 
 def abort_if_video_id_doesnt_exist(data):
     if(not data.exists):
@@ -32,12 +53,15 @@ def abort_if_video_exists(id):
         abort(409, message="Video already exists with that ID...")
 
 def check_api_keys(key):
-    valid_key = db.collection('api_keys').document("matching_setting_api_keys").get().to_dict()["api_key"]
-    if(valid_key != key):
-        abort(409, message="Invalid API Key")
+    if(api_key != key):
+        abort(401 , message="Unauthorized Access")
 
 class Video(Resource):
     def get(self, id):
+
+        args = video_auth_args.parse_args()
+        check_api_keys(args['api_key'])
+
         data = db_ref.document(id).get()
         abort_if_video_id_doesnt_exist(data)
         return json.dumps(data.to_dict()), 200
@@ -45,7 +69,6 @@ class Video(Resource):
     def post(self, id):
 
         args = video_post_args.parse_args()
-        print(args)
         check_api_keys(args['api_key'])
 
         abort_if_video_exists(id)
@@ -58,9 +81,13 @@ class Video(Resource):
         return Videos[id], 201
 
     def delete(self, id):
+        args = video_auth_args.parse_args()
+        check_api_keys(args['api_key'])
+
         abort_if_video_id_doesnt_exist(id)
         del Videos[id]
         return '', 204
+
 
 api.add_resource(Video, "/video/<string:id>")
 
