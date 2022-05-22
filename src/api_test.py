@@ -1,13 +1,13 @@
 from flask import Flask, jsonify, json
 from flask_restful import Api, Resource, reqparse, abort
 import threading
-#from keras import models
+from keras import models
 from firebase_admin import credentials, firestore, initialize_app
 
 app = Flask(__name__)
 api = Api(app, prefix='/api/v1')
 #this set up ML model
-#model = models.load_model('../resources/saved_model/my_model')
+model = models.load_model('../resources/saved_model/my_model')
 
 #this set up firestore auth and client
 cred = credentials.Certificate('key.json')
@@ -99,7 +99,7 @@ def index():
 
 @app.route('/<float:prediction>', methods=['POST', 'GET'])
 def predict_page(prediction):
-    #prediction_result = model.predict([float(prediction)])
+    prediction_result = model.predict([float(prediction)])
     return str("menten")
 
 
