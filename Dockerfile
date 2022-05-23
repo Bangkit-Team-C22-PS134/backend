@@ -14,7 +14,7 @@ RUN pip install colorama
 RUN pip install flask_restful
 RUN pip install gunicorn
 RUN pip install firebase_admin
-RUN pip install tensorflow
+#RUN pip install tensorflow
 
 
 WORKDIR /app/src

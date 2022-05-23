@@ -1,16 +1,21 @@
+import os
+
 from flask import Flask, jsonify, json, request
 from flask_restful import Api, Resource, reqparse, abort
 import threading
-from keras import models
+import logging
+from json import loads
+from os import getenv
+#from keras import models
+from werkzeug.exceptions import BadRequest
 from firebase_admin import credentials, firestore, initialize_app
 
 app = Flask(__name__)
 api = Api(app)
 #this set up ML model
-model = models.load_model('../resources/saved_model/my_model')
-
-#this set up firestore auth and client
-cred = credentials.Certificate('key.json')
+#model = models.load_model('../resources/saved_model/my_model')
+#this set up firestore auth and client , also using environment variable to store private key
+cred = credentials.Certificate(json.loads(os.environ["FIREBASE_KEY"] , strict=False))
 default_app = initialize_app(cred)
 db = firestore.client()
 db_ref = db.collection('Videos')
@@ -24,9 +29,6 @@ video_post_args.add_argument("views", type=int, help="Views of the video is requ
 video_post_args.add_argument("api_key", type=str , help="Api_keys is needed to post a video", required = True)
 Videos = {}
 
-
-video_auth_args = reqparse.RequestParser()
-video_auth_args.add_argument("api_key", type=str , help="Api_keys is needed", required = True)
 
 #this set up firebase listening document for changes in api_keys
 
@@ -44,6 +46,11 @@ doc_ref = db_key
 # Watch the document
 doc_watch = doc_ref.on_snapshot(on_snapshot)
 
+def get_error_msg():
+    if app.config.get("FAB_API_SHOW_STACKTRACE"):
+        return app.format_exc()
+    return "Fatal error"
+
 def abort_if_video_id_doesnt_exist(data):
     if(not data.exists):
         abort(404 , message="Could not find the video...")
@@ -59,39 +66,58 @@ def check_api_keys(key):
 class Video(Resource):
     def get(self, id):
 
-        args = video_auth_args.parse_args()
-        check_api_keys(args['api_key'])
+        try:
+            args = video_post_args.parse_args()
+            check_api_keys(args['api_key'])
 
-        data = db_ref.document(id).get()
-        abort_if_video_id_doesnt_exist(data)
-        return json.dumps(data.to_dict()), 200
+            data = db_ref.document(id).get()
+            abort_if_video_id_doesnt_exist(data)
+            return json.dumps(data.to_dict()), 200
+        except BadRequest as e:
+            return str(e), 400
+        except Exception as e:
+            logging.exception(e)
+            return str(e), 500
+
 
     def post(self, id):
-
-        args = video_post_args.parse_args()
-        check_api_keys(args['api_key'])
-
-        abort_if_video_exists(id)
         try:
+            args = video_post_args.parse_args()
+            check_api_keys(args['api_key'])
+
+            abort_if_video_exists(id)
+
             db_ref.document(id).set(args)
             return json.dumps({"success": True}), 200
+        except BadRequest as e:
+            return str(e), 400
         except Exception as e:
-            return json.dumps({"message": f"An Error Occured: {e}"}), 500
-
-        return Videos[id], 201
+            logging.exception(e)
+            return str(e), 500
 
     def delete(self, id):
-        args = video_auth_args.parse_args()
-        check_api_keys(args['api_key'])
+        try:
+            args = video_post_args.parse_args()
+            check_api_keys(args['api_key'])
 
-        abort_if_video_id_doesnt_exist(id)
-        del Videos[id]
-        return '', 204
-
+            abort_if_video_id_doesnt_exist(id)
+            del Videos[id]
+            return '', 204
+        except BadRequest as e:
+            return str(e), 400
+        except Exception as e:
+            logging.exception(e)
+            return str(e), 500
 
 api.add_resource(Video, "/video/<string:id>")
 
 
+
+@app.route("/<int:id>")
+def hello_world(id):
+    data = db_ref.document(id).get()
+    abort_if_video_id_doesnt_exist(data)
+    return json.dumps(data.to_dict()), 200
 
 if __name__ == "__main__":
     app.run(debug=True) #dont run debug true if its in production

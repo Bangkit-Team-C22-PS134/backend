@@ -129,3 +129,8 @@ dmypy.json
 .pyre/
 
 
+!/src/.env
+*.py
+src/env_secret_setup.py
+src/env_secret.py
+src/.env
