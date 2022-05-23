@@ -100,7 +100,7 @@ def index():
 @app.route('/<float:prediction>', methods=['POST', 'GET'])
 def predict_page(prediction):
     prediction_result = model.predict([float(prediction)])
-    return str("menten")
+    return prediction_result
 
 
 if __name__ == "__main__":

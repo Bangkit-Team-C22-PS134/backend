@@ -1,11 +1,11 @@
-from flask import Flask, jsonify, json
+from flask import Flask, jsonify, json, request
 from flask_restful import Api, Resource, reqparse, abort
 import threading
 from keras import models
 from firebase_admin import credentials, firestore, initialize_app
 
 app = Flask(__name__)
-api = Api(app, prefix='/api/v1')
+api = Api(app)
 #this set up ML model
 model = models.load_model('../resources/saved_model/my_model')
 
@@ -91,16 +91,6 @@ class Video(Resource):
 
 api.add_resource(Video, "/video/<string:id>")
 
-
-
-@app.route('/', methods=['POST', 'GET'])
-def index():
-    return str("hello")
-
-@app.route('/<float:prediction>', methods=['POST', 'GET'])
-def predict_page(prediction):
-    prediction_result = model.predict([float(prediction)])
-    return str("menten")
 
 
 if __name__ == "__main__":

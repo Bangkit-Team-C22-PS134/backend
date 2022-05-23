@@ -1,16 +1,15 @@
 import requests
+from json import dumps
 
 
-BASE = "http://127.0.0.1:5000/api/v1/"
+if __name__ == "__main__" :
 
-data = {
+    BASE = "http://127.0.0.1:5000/"
 
-    "name" : "third video",
-    "likes" : 72,
-    "views" : 829,
-    "api_key" : "91ee4fa1-ea73-4b43-97ef-38ff055f97a8"
+    data = {
+        "api_key": "91ee4fa1-ea73-4b43-97ef-38ff055f97a8"
 
-}
+    }
 
-response = requests.get(BASE + "video/3", data)
-print(response.json())
+    response = requests.get(BASE + "video/3", data)
+    print(response.json())
