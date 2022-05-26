@@ -27,7 +27,6 @@ video_post_args.add_argument("name", type=str, help="Name of the video is requir
 video_post_args.add_argument("likes", type=int, help="Likes on the video is required", required=True)
 video_post_args.add_argument("views", type=int, help="Views of the video is required", required=True)
 video_post_args.add_argument("api_key", type=str , help="Api_keys is needed to post a video", required = True)
-Videos = {}
 
 
 #this set up firebase listening document for changes in api_keys
@@ -74,6 +73,7 @@ class Video(Resource):
             abort_if_video_id_doesnt_exist(data)
             return json.dumps(data.to_dict()), 200
         except BadRequest as e:
+            print(request)
             return str(e), 400
         except Exception as e:
             logging.exception(e)
@@ -97,11 +97,10 @@ class Video(Resource):
 
     def delete(self, id):
         try:
-            args = video_auth_args.parse_args()
+            args = video_post_args.parse_args()
             check_api_keys(args['api_key'])
 
             abort_if_video_id_doesnt_exist(id)
-            del Videos[id]
             return '', 204
         except BadRequest as e:
             return str(e), 400
@@ -111,6 +110,11 @@ class Video(Resource):
 
 api.add_resource(Video, "/video/<string:id>")
 
+@app.route("/<int:id>")
+def hello_world(id):
+    data = db_ref.document(str(id)).get()
+    abort_if_video_id_doesnt_exist(data)
+    return json.dumps(data.to_dict()), 200
 
 if __name__ == "__main__":
     app.run(debug=True) #dont run debug true if its in production

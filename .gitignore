@@ -134,3 +134,4 @@ dmypy.json
 src/env_secret_setup.py
 src/env_secret.py
 src/.env
+src/key.json

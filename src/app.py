@@ -115,7 +115,7 @@ api.add_resource(Video, "/video/<string:id>")
 
 @app.route("/<int:id>")
 def hello_world(id):
-    data = db_ref.document(id).get()
+    data = db_ref.document(str(id)).get()
     abort_if_video_id_doesnt_exist(data)
     return json.dumps(data.to_dict()), 200
 
