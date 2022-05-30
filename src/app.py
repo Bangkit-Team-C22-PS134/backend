@@ -4,6 +4,7 @@ from flask import Flask, jsonify, json, request
 from flask_restful import Api, Resource, reqparse, abort
 import threading
 import logging
+from circle_data_model import User
 from json import loads
 from os import getenv
 #from keras import models

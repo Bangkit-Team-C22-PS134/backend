@@ -6,33 +6,34 @@ import threading
 import logging
 from json import loads
 from os import getenv
-#from keras import models
+# from keras import models
 from werkzeug.exceptions import BadRequest
 from firebase_admin import credentials, firestore, initialize_app
 
 app = Flask(__name__)
 api = Api(app)
-#this set up ML model
-#model = models.load_model('../resources/saved_model/my_model')
-#this set up firestore auth and client , also using environment variable to store private key
+# this set up ML model
+# model = models.load_model('../resources/saved_model/my_model')
+# this set up firestore auth and client , also using environment variable to store private key
+
 cred = credentials.Certificate("key.json")
 default_app = initialize_app(cred)
 db = firestore.client()
 db_ref = db.collection('Videos')
 db_key = db.collection('api_keys').document("matching_setting_api_keys")
 
-#this set up the api resources and request json
+# this set up the api resources and request json
 video_post_args = reqparse.RequestParser()
-video_post_args.add_argument("name", type=str, help="Name of the video is required", required=True)
-video_post_args.add_argument("likes", type=int, help="Likes on the video is required", required=True)
-video_post_args.add_argument("views", type=int, help="Views of the video is required", required=True)
-video_post_args.add_argument("api_key", type=str , help="Api_keys is needed to post a video", required = True)
+video_post_args.add_argument("name", type=str, help="Name of the video is required", required=False)
+video_post_args.add_argument("likes", type=int, help="Likes on the video is required", required=False)
+video_post_args.add_argument("views", type=int, help="Views of the video is required", required=False)
 
 
-#this set up firebase listening document for changes in api_keys
+# this set up firebase listening document for changes in api_keys
 
 # Create an Event for notifying main thread.
 callback_done = threading.Event()
+
 
 # Create a callback on_snapshot function to capture changes
 def on_snapshot(doc_snapshot, changes, read_time):
@@ -45,29 +46,41 @@ doc_ref = db_key
 # Watch the document
 doc_watch = doc_ref.on_snapshot(on_snapshot)
 
+
 def get_error_msg():
     if app.config.get("FAB_API_SHOW_STACKTRACE"):
         return app.format_exc()
     return "Fatal error"
 
+
 def abort_if_video_id_doesnt_exist(data):
-    if(not data.exists):
-        abort(404 , message="Could not find the video...")
+    if (not data.exists):
+        abort(404, message="Could not find the video...")
+
 
 def abort_if_video_exists(id):
-    if(db_ref.document(id).get().exists):
+    if (db_ref.document(id).get().exists):
         abort(409, message="Video already exists with that ID...")
 
+
 def check_api_keys(key):
-    if(api_key != key):
-        abort(401 , message="Unauthorized Access")
+    if (api_key != key):
+        abort(401, message="Unauthorized Access")
+
+class match_user(Resource):
+    def get(self, id):
+        # mulai processing metode get
+        # return list semua user
+        
+
 
 class Video(Resource):
     def get(self, id):
+        #mulai processing metode get
 
         try:
             args = video_post_args.parse_args()
-            check_api_keys(args['api_key'])
+            check_api_keys(request.headers.get('user-api-key'))
 
             data = db_ref.document(id).get()
             abort_if_video_id_doesnt_exist(data)
@@ -78,7 +91,6 @@ class Video(Resource):
         except Exception as e:
             logging.exception(e)
             return str(e), 500
-
 
     def post(self, id):
         try:
@@ -108,7 +120,9 @@ class Video(Resource):
             logging.exception(e)
             return str(e), 500
 
+
 api.add_resource(Video, "/video/<string:id>")
+api.add_resource(match_user, "/user/<string:id>")
 
 @app.route("/<int:id>")
 def hello_world(id):
@@ -116,6 +130,6 @@ def hello_world(id):
     abort_if_video_id_doesnt_exist(data)
     return json.dumps(data.to_dict()), 200
 
-if __name__ == "__main__":
-    app.run(debug=True) #dont run debug true if its in production
 
+if __name__ == "__main__":
+    app.run(debug=True)  # dont run debug true if its in production
