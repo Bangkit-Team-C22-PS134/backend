@@ -121,5 +121,5 @@ def hello_world(id):
     return json.dumps(data.to_dict()), 200
 
 if __name__ == "__main__":
-    app.run(debug=True) #dont run debug true if its in production
+    app.run(debug=False) #dont run debug true if its in production
 
