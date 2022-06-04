@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 from datetime import date
 
+###TO DO MAKE THE CODE MORE MODULAR AND REMOVE THE SHITTY MAGIC VARIABLE
+### I WILL NOT REFACTOR THIS UNTIL THE MAIN FEATURE IS DONE
 
 def convert_snapshot(data, desired_key = None):
     """
