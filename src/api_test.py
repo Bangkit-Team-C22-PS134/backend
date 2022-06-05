@@ -51,7 +51,7 @@ def on_snapshot_apikey(doc_snapshot, changes, read_time):
 def on_snapshot_chatRoomPrefs(doc_snapshot, changes, read_time):
     for doc in doc_snapshot:
         print("===============================")
-        print(doc_snapshot.to_dict())
+        print(doc.to_dict())
     print("===============================\n===============================")
     callback_done_apikey.set()
 
