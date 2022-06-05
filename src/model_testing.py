@@ -32,15 +32,54 @@ if __name__ == "__main__" :
     caregiver_ds = circle_utility.df_to_dataset(data)
     TEXT_INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_TEXT_MODEL)
 
-    #update this
+    # update this
     TEXT_INDEX.index_from_dataset(
         caregiver_ds.map(lambda features: (features['CAREGIVER_ID'], MAIN_TEXT_MODEL([features['text']])))
     )
 
+    INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_USER_MODEL)
+
+    # update_this
+    INDEX.index_from_dataset(
+        caregiver_ds.map(lambda features: (features['CAREGIVER_ID'], MAIN_CAREGIVER_MODEL(features)))
+    )
+
+    a = ['Gender', 'Age', 'ADHD-Hiperaktif-dan-kurang-fokus', 'Depresi', 'Gangguan-kecemasan', 'Gangguan-makan',
+         'Gangguan-stres-pascatrauma', 'Skizofrenia']
+    value = ['Pria', 30, 0, 1, 0, 0, 1, 0]
+    dictionary_Test = dict((el, ([value[ix]])) for ix, el in enumerate(a))
+    print(dictionary_Test)
+
+    a, titles = INDEX(dictionary_Test, k=1)
+    print(f"Top recommendations: {titles[0]}")
+
+    a, titles = TEXT_INDEX(np.array(["AAAA sa sayang"]), k=1)
+
+    print(f"Top recommendations: {titles[0]}")
+
+    print(MAIN_TEXT_MODEL(np.array(["aa sss"])))
+
+
+
+def test_model_v1():
+    cred = credentials.Certificate("key.json")
+    default_app = initialize_app(cred)
+    db = firestore.client()
+    db_ref = db.collection('chat_rooms')
+    data = db_ref.get()
+    data = circle_utility.unpack_caregiver_snapshot(data)
+    data = circle_utility.convert_caregiver_dictList_to_df(data)
+    caregiver_ds = circle_utility.df_to_dataset(data)
+    TEXT_INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_TEXT_MODEL)
+
+    # update this
+    TEXT_INDEX.index_from_dataset(
+        caregiver_ds.map(lambda features: (features['CAREGIVER_ID'], MAIN_TEXT_MODEL([features['text']])))
+    )
 
     INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_USER_MODEL)
 
-    #update_this
+    # update_this
     INDEX.index_from_dataset(
         caregiver_ds.map(lambda features: (features['CAREGIVER_ID'], MAIN_CAREGIVER_MODEL(features)))
     )
@@ -58,6 +97,3 @@ if __name__ == "__main__" :
     print(f"Top recommendations: {titles[0]}")
 
     print(MAIN_TEXT_MODEL(np.array(["aa sss"])))
-
-
-

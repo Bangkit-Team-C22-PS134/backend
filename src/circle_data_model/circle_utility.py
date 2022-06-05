@@ -101,8 +101,12 @@ def unpack_caregiver_snapshot(data):
     caregiver_dict = map(lambda feature: Merge(feature, feature.pop('caregiver').get().to_dict()),
                          caregiver_dict_unpacked)
 
+    #check for room capacity
+    caregiver_dict = map(lambda feature: feature if (feature['max_user'] > len(feature['users'])) else None, caregiver_dict)
+
     # this seperate desired keys from unused keys
     caregiver_dict = map(lambda x: dict((k, x[k]) for k in desired_keys if k in x), caregiver_dict)
+
 
     # this convert birthday stamp into interger age
     caregiver_dict = map(lambda feature: Merge(feature, {'age': age(feature.pop('birthday'))}), caregiver_dict)
@@ -110,6 +114,10 @@ def unpack_caregiver_snapshot(data):
     return list(caregiver_dict)
 
 def convert_caregiver_dictList_to_df(dictionary):
+    """
+    :param dictionary: list of dictionary
+    :return: dataframe of the said dictionary
+    """
     # Creates DataFrame.
     df = pd.DataFrame(dictionary)
     #change column name to feature according to the model

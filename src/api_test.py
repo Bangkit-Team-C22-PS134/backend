@@ -1,5 +1,6 @@
 import os
 
+import pandas as pd
 from flask import Flask, jsonify, json, request
 from flask_restful import Api, Resource, reqparse, abort
 import threading
@@ -14,10 +15,13 @@ from firebase_admin import credentials, firestore, initialize_app
 app = Flask(__name__)
 api = Api(app)
 # this set up ML model
-
 MAIN_TEXT_MODEL = tf.keras.models.load_model('../resources/saved_model/text_query_v1')
 MAIN_USER_MODEL = tf.keras.models.load_model('../resources/saved_model/user_query_v1')
 MAIN_CAREGIVER_MODEL = tf.keras.models.load_model('../resources/saved_model/caregiver_query_v1')
+
+#Variable for dataframe
+CAREGIVER_DATAFRAME = None
+CAREGIVER_DS = None
 
 # this set up firestore auth and client , also using environment variable to store private key
 cred = credentials.Certificate("key.json")
