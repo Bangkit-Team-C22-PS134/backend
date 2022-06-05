@@ -4,6 +4,7 @@ from flask import Flask, jsonify, json, request
 from flask_restful import Api, Resource, reqparse, abort
 import threading
 import logging
+import tensorflow as tf
 from json import loads
 from os import getenv
 # from keras import models
@@ -13,14 +14,18 @@ from firebase_admin import credentials, firestore, initialize_app
 app = Flask(__name__)
 api = Api(app)
 # this set up ML model
-# model = models.load_model('../resources/saved_model/my_model')
-# this set up firestore auth and client , also using environment variable to store private key
 
+MAIN_TEXT_MODEL = tf.keras.models.load_model('../resources/saved_model/text_query_v1')
+MAIN_USER_MODEL = tf.keras.models.load_model('../resources/saved_model/user_query_v1')
+MAIN_CAREGIVER_MODEL = tf.keras.models.load_model('../resources/saved_model/caregiver_query_v1')
+
+# this set up firestore auth and client , also using environment variable to store private key
 cred = credentials.Certificate("key.json")
 default_app = initialize_app(cred)
 db = firestore.client()
-db_ref = db.collection('Videos')
+db_ref_userPref = db.collection('user_pref')
 db_key = db.collection('api_keys').document("matching_setting_api_keys")
+db_index = db.collection('chat_room_pref')
 
 # this set up the api resources and request json
 video_post_args = reqparse.RequestParser()
@@ -32,20 +37,27 @@ video_post_args.add_argument("views", type=int, help="Views of the video is requ
 # this set up firebase listening document for changes in api_keys
 
 # Create an Event for notifying main thread.
-callback_done = threading.Event()
-
+callback_done_apikey = threading.Event()
+callback_done_chatRoomPrefs = threading.Event()
 
 # Create a callback on_snapshot function to capture changes
-def on_snapshot(doc_snapshot, changes, read_time):
+def on_snapshot_apikey(doc_snapshot, changes, read_time):
     global api_key
     for doc in doc_snapshot:
         api_key = doc.get("api_key")
-    callback_done.set()
+    callback_done_apikey.set()
 
-doc_ref = db_key
+# Create a callback on_snapshot function to capture changes
+def on_snapshot_chatRoomPrefs(doc_snapshot, changes, read_time):
+    for doc in doc_snapshot:
+        print("===============================")
+        print(doc_snapshot.to_dict())
+    print("===============================\n===============================")
+    callback_done_apikey.set()
+
 # Watch the document
-doc_watch = doc_ref.on_snapshot(on_snapshot)
-
+doc_watch_apikey = db_key.on_snapshot(on_snapshot_apikey)
+doc_watch_chatRoomPrefs = db_index.on_snapshot(on_snapshot_chatRoomPrefs)
 
 def get_error_msg():
     if app.config.get("FAB_API_SHOW_STACKTRACE"):
@@ -59,7 +71,7 @@ def abort_if_video_id_doesnt_exist(data):
 
 
 def abort_if_video_exists(id):
-    if (db_ref.document(id).get().exists):
+    if (db_ref_userPref.document(id).get().exists):
         abort(409, message="Video already exists with that ID...")
 
 
@@ -67,7 +79,7 @@ def check_api_keys(key):
     if (api_key != key):
         abort(401, message="Unauthorized Access")
 
-class match_user(Resource):
+class match_user_resource(Resource):
     def get(self, id):
         # mulai processing metode get
         # return list semua user
@@ -82,7 +94,7 @@ class Video(Resource):
             args = video_post_args.parse_args()
             check_api_keys(request.headers.get('user-api-key'))
 
-            data = db_ref.document(id).get()
+            data = db_ref_userPref.document(id).get()
             abort_if_video_id_doesnt_exist(data)
             return json.dumps(data.to_dict()), 200
         except BadRequest as e:
@@ -99,7 +111,7 @@ class Video(Resource):
 
             abort_if_video_exists(id)
 
-            db_ref.document(id).set(args)
+            db_ref_userPref.document(id).set(args)
             return json.dumps({"success": True}), 200
         except BadRequest as e:
             return str(e), 400
@@ -120,15 +132,26 @@ class Video(Resource):
             logging.exception(e)
             return str(e), 500
 
-
 api.add_resource(Video, "/video/<string:id>")
-api.add_resource(match_user, "/user/<string:id>")
+api.add_resource(match_user_resource, "/user/<string:id>")
 
-@app.route("/<int:id>")
-def hello_world(id):
-    data = db_ref.document(str(id)).get()
+@app.route("/chat_room/update/<string:id>")
+def update_index(id):
+    """
+    :param id: document id of chat_room that need to be updated
+    :return: 200 http code
+    """
+    data = db_index.document(str(id)).get()
     abort_if_video_id_doesnt_exist(data)
     return json.dumps(data.to_dict()), 200
+
+@app.route("/user/match/<string:id>")
+def match_user(id):
+    """
+    :param id: user id and a document id
+    :return: list of potential candidate in form of list of chatrooms document id
+    """
+    return 0
 
 
 if __name__ == "__main__":
