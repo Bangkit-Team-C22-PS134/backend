@@ -120,4 +120,3 @@ def convert_caregiver_dictList_to_df(dictionary):
     fill_non_existent_column(df, is_caregiver = True)
     return df
 
-
