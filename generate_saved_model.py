@@ -22,7 +22,6 @@ def build_model(hub_module, name):
 
 model_nlm_v1 = build_model(hub_layer, 'modelV1')
 
-model_nlm_v1.save('resources/saved_model/text_query_v1')
 
 import numpy as np
 import pandas as pd
@@ -216,6 +215,7 @@ model.fit(user_ds,
           epochs=50)
 
 
-model.user_model.save('resources/saved_model_weights/user_query_v1')
+model_nlm_v1.save('resources/saved_model/text_query_v1')
+model.user_model.save('resources/saved_model/user_query_v1')
 model.caregiver_model.save('resources/saved_model/caregiver_query_v1')
 
