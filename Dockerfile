@@ -3,8 +3,7 @@ From python:3.9
 COPY src/ app/src/
 COPY resources/ app/resources/
 COPY requirements.txt .
-RUN --mount=type=cache,target=/root/.cache \
-    pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 
 WORKDIR /app/src
