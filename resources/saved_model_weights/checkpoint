@@ -1,0 +1,2 @@
+model_checkpoint_path: "caregiver_query_v1"
+all_model_checkpoint_paths: "caregiver_query_v1"
