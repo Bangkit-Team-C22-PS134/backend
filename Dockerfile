@@ -1,7 +1,6 @@
 From python:3.9
 
 COPY src/ app/src/
-COPY src/key.json app/src/
 COPY resources/ app/resources/
 COPY requirements.txt .
 RUN --mount=type=cache,target=/root/.cache \
