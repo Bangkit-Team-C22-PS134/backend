@@ -212,10 +212,8 @@ model = RecomendModel()
 model.compile(optimizer='adam',
               loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
               metrics=['accuracy'])
-
-
-model.user_model.load_weights('resources/saved_model_weights/user_query_v1')
-model.caregiver_model.load_weights('resources/saved_model_weights/caregiver_query_v1')
+model.fit(user_ds,
+          epochs=50)
 
 
 model.user_model.save('resources/saved_model_weights/user_query_v1')
