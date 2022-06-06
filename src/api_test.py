@@ -160,7 +160,7 @@ api.add_resource(Video, "/video/<string:id>")
 api.add_resource(match_user_resource, "/user/<string:id>")
 
 @app.route("/chat_room/update", methods=["GET"])
-def update_index():
+def match_user():
     # get data from firestore and check if its exist
     user_id = request.form.get("user_id")
     print(request.form.get("user_id"))
@@ -190,7 +190,7 @@ def update_index():
     return json.dumps(data), 200
 
 @app.route("/")
-def match_user(id):
+def index():
     """
     :param id: document id of chat_room that need to be updated
     :return: 200 http code
