@@ -6,6 +6,8 @@ from flask_restful import Api, Resource, reqparse, abort
 import threading
 import logging
 import tensorflow as tf
+from  circle_data_model import  circle_utility
+import tensorflow_recommenders as tfrs
 from json import loads
 from os import getenv
 # from keras import models
@@ -18,6 +20,8 @@ api = Api(app)
 MAIN_TEXT_MODEL = tf.keras.models.load_model('../resources/saved_model/text_query_v1')
 MAIN_USER_MODEL = tf.keras.models.load_model('../resources/saved_model/user_query_v1')
 MAIN_CAREGIVER_MODEL = tf.keras.models.load_model('../resources/saved_model/caregiver_query_v1')
+TEXT_INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_TEXT_MODEL)
+INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_USER_MODEL)
 
 #Variable for dataframe
 CAREGIVER_DATAFRAME = None
@@ -27,15 +31,19 @@ CAREGIVER_DS = None
 cred = credentials.Certificate("key.json")
 default_app = initialize_app(cred)
 db = firestore.client()
-db_ref_userPref = db.collection('user_pref')
+db_ref_userPref = db.collection('users'
+                                '')
 db_key = db.collection('api_keys').document("matching_setting_api_keys")
-db_index = db.collection('chat_room_pref')
+db_chat_room_pref = db.collection('chat_room_pref')
 
 # this set up the api resources and request json
 video_post_args = reqparse.RequestParser()
 video_post_args.add_argument("name", type=str, help="Name of the video is required", required=False)
 video_post_args.add_argument("likes", type=int, help="Likes on the video is required", required=False)
 video_post_args.add_argument("views", type=int, help="Views of the video is required", required=False)
+
+user_args = reqparse.RequestParser()
+user_args.add_argument("user_id", type=str, help="User ID is needed" , required=True)
 
 
 # this set up firebase listening document for changes in api_keys
@@ -53,15 +61,25 @@ def on_snapshot_apikey(doc_snapshot, changes, read_time):
 
 # Create a callback on_snapshot function to capture changes
 def on_snapshot_chatRoomPrefs(doc_snapshot, changes, read_time):
-    for doc in doc_snapshot:
-        print("===============================")
-        print(doc.to_dict())
-    print("===============================\n===============================")
+    global INDEX , TEXT_INDEX
+    data = circle_utility.unpack_caregiver_snapshot(doc_snapshot)
+    data = circle_utility.convert_caregiver_dictList_to_df(data)
+    caregiver_ds = circle_utility.df_to_dataset(data)
+    # update this
+    TEXT_INDEX.index_from_dataset(
+        caregiver_ds.map(lambda features: (features['CAREGIVER_ID'], MAIN_TEXT_MODEL([features['text']])))
+    )
+
+
+    # update_this
+    INDEX.index_from_dataset(
+        caregiver_ds.map(lambda features: (features['CAREGIVER_ID'], MAIN_CAREGIVER_MODEL(features)))
+    )
     callback_done_apikey.set()
 
 # Watch the document
 doc_watch_apikey = db_key.on_snapshot(on_snapshot_apikey)
-doc_watch_chatRoomPrefs = db_index.on_snapshot(on_snapshot_chatRoomPrefs)
+doc_watch_chatRoomPrefs = db_chat_room_pref.on_snapshot(on_snapshot_chatRoomPrefs)
 
 def get_error_msg():
     if app.config.get("FAB_API_SHOW_STACKTRACE"):
@@ -69,9 +87,11 @@ def get_error_msg():
     return "Fatal error"
 
 
-def abort_if_video_id_doesnt_exist(data):
+def abort_if_user_id_doesnt_exist(data):
+    print("from func" , data.exists)
     if (not data.exists):
-        abort(404, message="Could not find the video...")
+        abort(404, message="Could not find the user...")
+
 
 
 def abort_if_video_exists(id):
@@ -99,7 +119,7 @@ class Video(Resource):
             check_api_keys(request.headers.get('user-api-key'))
 
             data = db_ref_userPref.document(id).get()
-            abort_if_video_id_doesnt_exist(data)
+            abort_if_user_id_doesnt_exist(data)
             return json.dumps(data.to_dict()), 200
         except BadRequest as e:
             print(request)
@@ -128,7 +148,7 @@ class Video(Resource):
             args = video_post_args.parse_args()
             check_api_keys(args['api_key'])
 
-            abort_if_video_id_doesnt_exist(id)
+            abort_if_user_id_doesnt_exist(id)
             return '', 204
         except BadRequest as e:
             return str(e), 400
@@ -139,23 +159,43 @@ class Video(Resource):
 api.add_resource(Video, "/video/<string:id>")
 api.add_resource(match_user_resource, "/user/<string:id>")
 
-@app.route("/chat_room/update/<string:id>")
-def update_index(id):
+@app.route("/chat_room/update", methods=["GET"])
+def update_index():
+    # get data from firestore and check if its exist
+    user_id = request.form.get("user_id")
+    print(request.form.get("user_id"))
+    if(user_id is None):
+        return "id is not provided", 400
+
+    check_api_keys(request.headers.get('user-api-key'))
+    print("api key")
+    data = db_ref_userPref.document(str(user_id)).get()
+    print(data.to_dict())
+    abort_if_user_id_doesnt_exist(data)
+
+    # process the data
+    data = list(circle_utility.unpack_user_snapshot(data))
+    data = circle_utility.convert_user_dictList_to_df(data)
+
+    # turn dataframe into list and pack the value with brackets
+    data = data.to_dict('records')[0]
+    for k, v in data.items():
+        data[k] = [v]
+
+    _, recommendation = INDEX(data, k=1)
+    data = {
+        "recommendation": recommendation[0].numpy().tolist()
+    }
+    data = list(map(lambda string: string.decode("utf-8").strip(), data['recommendation']))
+    return json.dumps(data), 200
+
+@app.route("/")
+def match_user(id):
     """
     :param id: document id of chat_room that need to be updated
     :return: 200 http code
     """
-    data = db_index.document(str(id)).get()
-    abort_if_video_id_doesnt_exist(data)
-    return json.dumps(data.to_dict()), 200
-
-@app.route("/user/match/<string:id>")
-def match_user(id):
-    """
-    :param id: user id and a document id
-    :return: list of potential candidate in form of list of chatrooms document id
-    """
-    return 0
+    return "what"
 
 
 if __name__ == "__main__":

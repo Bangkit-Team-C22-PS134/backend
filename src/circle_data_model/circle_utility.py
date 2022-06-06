@@ -16,7 +16,6 @@ def convert_snapshot(data, desired_key = None):
 
     return list(data_dictionary)
 
-
 def fill_non_existent_column(df, is_caregiver=False):
     """
     This fill the df with unique problems column i
@@ -34,7 +33,6 @@ def fill_non_existent_column(df, is_caregiver=False):
         else:
             df[col] = 0
 
-
 def df_to_dataset(dataframe, shuffle=True, batch_size=32):
     """
     A utility method to create a tf.data dataset from a Pandas Dataframe
@@ -45,8 +43,6 @@ def df_to_dataset(dataframe, shuffle=True, batch_size=32):
         ds = ds.shuffle(buffer_size=len(dataframe))
     ds = ds.batch(batch_size)
     return ds
-
-
 
 def age(birthdate):
     today = date.today()
@@ -69,7 +65,6 @@ def convert_categorical_data(df, col, is_caregiver = False):
             df['Caregiver-'+genre] = df[col].str.contains(genre).astype('int')
     df.drop(col, axis=1, inplace=True)
 
-
 def change_column_name(df, old_name, new_name):
     """
     replace list of column name in old_name to new colum name in new_name
@@ -78,7 +73,6 @@ def change_column_name(df, old_name, new_name):
     res = {old_name[i]: new_name[i] for i in range(len(new_name))}
     df.rename(columns=res, inplace=True)
 
-
 def Merge(dict1, dict2):
     """
     Python code to merge dict
@@ -86,11 +80,10 @@ def Merge(dict1, dict2):
     res = {**dict1, **dict2}
     return res
 
-
 def unpack_caregiver_snapshot(data):
     """
 
-    :param data: data is a snapshot of chatroom collection
+    :param data: data is a snapshot list of chatroom collection
     :return: list of caregiver in form of dictionary
     """
     desired_keys = ["problems", "birthday", "gender", "caregiver_id", "text"]
@@ -102,7 +95,7 @@ def unpack_caregiver_snapshot(data):
                          caregiver_dict_unpacked)
 
     #check for room capacity
-    caregiver_dict = map(lambda feature: feature if (feature['max_user'] > len(feature['users'])) else None, caregiver_dict)
+    caregiver_dict = filter(lambda feature: feature['max_user'] > len(feature['users']) , caregiver_dict)
 
     # this seperate desired keys from unused keys
     caregiver_dict = map(lambda x: dict((k, x[k]) for k in desired_keys if k in x), caregiver_dict)
@@ -126,5 +119,33 @@ def convert_caregiver_dictList_to_df(dictionary):
     convert_categorical_data(df, "Caregiver_Tipe_Masalah", is_caregiver = True)
     #fill missing column with default value
     fill_non_existent_column(df, is_caregiver = True)
+    return df
+
+
+def unpack_user_snapshot(data):
+    print(type(data))
+    if (type(data) != list):
+        data = [data]
+    print(type(data))
+    data = convert_snapshot(data, desired_key=["problems", "gender", "birthday", "text"])
+    data = map(lambda feature: Merge(feature, {'age': age(feature.pop('birthday'))}), data)
+
+    return data
+
+
+def convert_user_dictList_to_df(dictionary):
+    """
+    :param dictionary: list of dictionary
+    :return: dataframe of the said dictionary
+    """
+    # Creates DataFrame.
+    df = pd.DataFrame(dictionary)
+    # change column name to feature according to the model
+    change_column_name(df, ['problems', 'gender', 'caregiver_id', 'age'],
+                       ['Tipe_Masalah', 'Gender', 'CAREGIVER_ID', 'Age'])
+    # convert categorical data into their own column
+    convert_categorical_data(df, "Tipe_Masalah", is_caregiver=False)
+    # fill missing column with default value
+    fill_non_existent_column(df, is_caregiver=False)
     return df
 
