@@ -15,6 +15,9 @@ RUN pip install gunicorn
 RUN pip install firebase_admin
 RUN pip install tensorflow
 RUN pip install tensorflow_recommenders
+RUN pip install pandas
+RUN pip install numpy
+RUN pip install datetime
 
 
 WORKDIR /app/src
