@@ -5,22 +5,19 @@ from flask import Flask, jsonify, json, request
 from flask_restful import Api, Resource, reqparse, abort
 import threading
 import logging
-import tensorflow as tf
+from keras.models import load_model
 from  circle_data_model import  circle_utility
 import tensorflow_recommenders as tfrs
-from json import loads
-from os import getenv
-# from keras import models
 from werkzeug.exceptions import BadRequest
 from firebase_admin import credentials, firestore, initialize_app
 
 app = Flask(__name__)
 api = Api(app)
 # this set up ML model
-MAIN_TEXT_MODEL = tf.keras.models.load_model('../resources/saved_model/text_query_v1')
-MAIN_USER_MODEL = tf.keras.models.load_model('../resources/saved_model/user_query_v1')
-MAIN_CAREGIVER_MODEL = tf.keras.models.load_model('../resources/saved_model/caregiver_query_v1')
-TEXT_INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_TEXT_MODEL)
+#MAIN_TEXT_MODEL = tf.keras.models.load_model('../resources/saved_model/text_query_v1')
+MAIN_USER_MODEL = load_model('../resources/saved_model/user_query_v1')
+MAIN_CAREGIVER_MODEL = load_model('../resources/saved_model/caregiver_query_v1')
+#TEXT_INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_TEXT_MODEL)
 INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_USER_MODEL)
 
 #Variable for dataframe
@@ -66,7 +63,7 @@ def on_snapshot_chatRoomPrefs(doc_snapshot, changes, read_time):
     caregiver_ds = circle_utility.df_to_dataset(data)
     # update this
     TEXT_INDEX.index_from_dataset(
-        caregiver_ds.map(lambda features: (features['CAREGIVER_ID'], MAIN_TEXT_MODEL([features['text']])))
+       caregiver_ds.map(lambda features: (features['CAREGIVER_ID'], MAIN_TEXT_MODEL([features['text']])))
     )
 
 

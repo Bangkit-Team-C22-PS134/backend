@@ -8,3 +8,9 @@ colorama
 tensorflow
 flask_restful
 gunicorn
+firebase_admin
+tensorflow
+pandas
+numpy
+datetime
+tensorflow_recommenders
