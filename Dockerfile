@@ -1,4 +1,4 @@
-From python:3.9
+From python:3.9.11
 
 COPY src/ app/src/
 COPY resources/ app/resources/

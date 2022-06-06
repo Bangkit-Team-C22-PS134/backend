@@ -14,10 +14,10 @@ from firebase_admin import credentials, firestore, initialize_app
 app = Flask(__name__)
 api = Api(app)
 # this set up ML model
-#MAIN_TEXT_MODEL = tf.keras.models.load_model('../resources/saved_model/text_query_v1')
+MAIN_TEXT_MODEL = load_model('../resources/saved_model/text_query_v1')
 MAIN_USER_MODEL = load_model('../resources/saved_model/user_query_v1')
 MAIN_CAREGIVER_MODEL = load_model('../resources/saved_model/caregiver_query_v1')
-#TEXT_INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_TEXT_MODEL)
+TEXT_INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_TEXT_MODEL)
 INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_USER_MODEL)
 
 #Variable for dataframe
