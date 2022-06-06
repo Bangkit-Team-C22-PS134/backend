@@ -31,8 +31,7 @@ CAREGIVER_DS = None
 cred = credentials.Certificate("key.json")
 default_app = initialize_app(cred)
 db = firestore.client()
-db_ref_userPref = db.collection('users'
-                                '')
+db_ref_userPref = db.collection('users')
 db_key = db.collection('api_keys').document("matching_setting_api_keys")
 db_chat_room_pref = db.collection('chat_room_pref')
 
@@ -91,7 +90,6 @@ def abort_if_user_id_doesnt_exist(data):
     print("from func" , data.exists)
     if (not data.exists):
         abort(404, message="Could not find the user...")
-
 
 
 def abort_if_video_exists(id):
@@ -159,7 +157,7 @@ class Video(Resource):
 api.add_resource(Video, "/video/<string:id>")
 api.add_resource(match_user_resource, "/user/<string:id>")
 
-@app.route("/chat_room/update", methods=["GET"])
+@app.route("/user/match", methods=["GET"])
 def match_user():
     # get data from firestore and check if its exist
     user_id = request.form.get("user_id")
