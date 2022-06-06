@@ -1,23 +1,11 @@
 From python:3.9
 
 COPY src/ app/src/
+COPY src/key.json app/src/
 COPY resources/ app/resources/
-
-RUN pip install Flask
-RUN pip install itsdangerous
-RUN pip install Jinja2
-RUN pip install MarkupSafe
-RUN pip install Werkzeug
-RUN pip install click
-RUN pip install colorama
-RUN pip install flask_restful
-RUN pip install gunicorn
-RUN pip install firebase_admin
-RUN pip install tensorflow
-RUN pip install tensorflow_recommenders
-RUN pip install pandas
-RUN pip install numpy
-RUN pip install datetime
+COPY requirements.txt .
+RUN --mount=type=cache,target=/root/.cache \
+    pip install -r requirements.txt
 
 
 WORKDIR /app/src
