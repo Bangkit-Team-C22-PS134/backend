@@ -32,9 +32,9 @@ from tensorflow import feature_column
 import pathlib
 import os
 
-
-user_dataframe = pd.read_csv("resources/Data/Combined Data.csv")
-caregiver_dataframe = pd.read_csv("resources/Data/Processed Caregiver Data.csv")
+print(os.getcwd())
+user_dataframe = pd.read_csv("../resources/Data/Combined Data.csv")
+caregiver_dataframe = pd.read_csv("../resources/Data/Processed Caregiver Data.csv")
 
 unique_masalah_user = np.unique(' '.join(user_dataframe['Tipe_Masalah']).split(' '))
 unique_masalah_caregiver = np.unique(' '.join(user_dataframe['Caregiver_Tipe_Masalah']).split(' '))
@@ -214,8 +214,6 @@ model.compile(optimizer='adam',
 model.fit(user_ds,
           epochs=50)
 
-
-model_nlm_v1.save('resources/saved_model/text_query_v1')
-model.user_model.save('resources/saved_model/user_query_v1')
-model.caregiver_model.save('resources/saved_model/caregiver_query_v1')
+def return_model():
+    return [model_nlm_v1,model.user_model,model.caregiver_model]
 

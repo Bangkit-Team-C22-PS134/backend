@@ -6,6 +6,7 @@ import threading
 import logging
 from keras.models import load_model
 from  circle_data_model import  circle_utility
+from circle_data_model import  generate_saved_model
 import tensorflow_recommenders as tfrs
 from werkzeug.exceptions import BadRequest
 from firebase_admin import credentials, firestore, initialize_app
@@ -13,9 +14,9 @@ from firebase_admin import credentials, firestore, initialize_app
 app = Flask(__name__)
 api = Api(app)
 # this set up ML model
-MAIN_TEXT_MODEL = load_model('../resources/saved_model/text_query_v1')
-MAIN_USER_MODEL = load_model('../resources/saved_model/user_query_v1')
-MAIN_CAREGIVER_MODEL = load_model('../resources/saved_model/caregiver_query_v1')
+MAIN_TEXT_MODEL = generate_saved_model.model_nlm_v1
+MAIN_USER_MODEL =  generate_saved_model.model.user_model
+MAIN_CAREGIVER_MODEL = generate_saved_model.model.caregiver_model
 TEXT_INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_TEXT_MODEL)
 INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_USER_MODEL)
 
