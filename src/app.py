@@ -10,6 +10,11 @@ from  circle_data_model import  circle_utility
 import tensorflow_recommenders as tfrs
 from werkzeug.exceptions import BadRequest
 from firebase_admin import credentials, firestore, initialize_app
+import subprocess
+cmd = ['python3', '../generate_saved_model.py']
+subprocess.Popen(cmd).wait()
+cmd = ['python', '../generate_saved_model.py']
+subprocess.Popen(cmd).wait()
 
 app = Flask(__name__)
 api = Api(app)
