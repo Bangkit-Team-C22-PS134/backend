@@ -28,7 +28,7 @@ CAREGIVER_DATAFRAME = None
 CAREGIVER_DS = None
 
 # this set up firestore auth and client , also using environment variable to store private key
-cred = credentials.Certificate(json.loads(os.environ["FIREBASE_KEY"] , strict=False))
+cred = credentials.Certificate("key.json")
 default_app = initialize_app(cred)
 db = firestore.client()
 db_ref_userPref = db.collection('users')
@@ -158,7 +158,7 @@ api.add_resource(Video, "/video/<string:id>")
 api.add_resource(match_user_resource, "/user/<string:id>")
 
 @app.route("/user/match", methods=["GET"])
-def update_index():
+def match_user():
     # get data from firestore and check if its exist
     user_id = request.form.get("user_id")
     print(request.form.get("user_id"))
@@ -188,7 +188,7 @@ def update_index():
     return json.dumps(data), 200
 
 @app.route("/")
-def match_user(id):
+def index():
     """
     :param id: document id of chat_room that need to be updated
     :return: 200 http code
