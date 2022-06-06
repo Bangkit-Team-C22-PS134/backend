@@ -10,6 +10,7 @@ flask_restful
 gunicorn
 firebase_admin
 tensorflow
+tensorflow_hub
 pandas
 numpy
 datetime

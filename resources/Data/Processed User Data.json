@@ -1,0 +1,602 @@
+[
+ {
+   "USER_ID": 1,
+   "Gender": "Pria",
+   "Age": 33,
+   "Tipe_Masalah": "Skizofrenia Gangguan-makan"
+ },
+ {
+   "USER_ID": 2,
+   "Gender": "Pria",
+   "Age": 29,
+   "Tipe_Masalah": "Depresi Gangguan-makan"
+ },
+ {
+   "USER_ID": 3,
+   "Gender": "Perempuan",
+   "Age": 32,
+   "Tipe_Masalah": "Depresi Gangguan-makan"
+ },
+ {
+   "USER_ID": 4,
+   "Gender": "Perempuan",
+   "Age": 44,
+   "Tipe_Masalah": "Skizofrenia Depresi"
+ },
+ {
+   "USER_ID": 5,
+   "Gender": "Pria",
+   "Age": 21,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus Gangguan-kecemasan"
+ },
+ {
+   "USER_ID": 6,
+   "Gender": "Perempuan",
+   "Age": 18,
+   "Tipe_Masalah": "Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 7,
+   "Gender": "Pria",
+   "Age": 38,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus Gangguan-kecemasan"
+ },
+ {
+   "USER_ID": 8,
+   "Gender": "Pria",
+   "Age": 31,
+   "Tipe_Masalah": "Skizofrenia Depresi ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 9,
+   "Gender": "Pria",
+   "Age": 35,
+   "Tipe_Masalah": "Gangguan-stres-pascatrauma Depresi"
+ },
+ {
+   "USER_ID": 10,
+   "Gender": "Pria",
+   "Age": 27,
+   "Tipe_Masalah": "Depresi"
+ },
+ {
+   "USER_ID": 11,
+   "Gender": "Pria",
+   "Age": 34,
+   "Tipe_Masalah": "Depresi Skizofrenia"
+ },
+ {
+   "USER_ID": 12,
+   "Gender": "Pria",
+   "Age": 44,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus Gangguan-makan"
+ },
+ {
+   "USER_ID": 13,
+   "Gender": "Perempuan",
+   "Age": 37,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 14,
+   "Gender": "Pria",
+   "Age": 39,
+   "Tipe_Masalah": "Gangguan-makan Depresi"
+ },
+ {
+   "USER_ID": 15,
+   "Gender": "Pria",
+   "Age": 28,
+   "Tipe_Masalah": "Gangguan-makan Depresi"
+ },
+ {
+   "USER_ID": 16,
+   "Gender": "Pria",
+   "Age": 40,
+   "Tipe_Masalah": "Depresi Skizofrenia"
+ },
+ {
+   "USER_ID": 17,
+   "Gender": "Pria",
+   "Age": 39,
+   "Tipe_Masalah": "Skizofrenia"
+ },
+ {
+   "USER_ID": 18,
+   "Gender": "Pria",
+   "Age": 23,
+   "Tipe_Masalah": "Gangguan-kecemasan"
+ },
+ {
+   "USER_ID": 19,
+   "Gender": "Perempuan",
+   "Age": 27,
+   "Tipe_Masalah": "Depresi Skizofrenia"
+ },
+ {
+   "USER_ID": 20,
+   "Gender": "Pria",
+   "Age": 44,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus Skizofrenia Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 21,
+   "Gender": "Perempuan",
+   "Age": 31,
+   "Tipe_Masalah": "Depresi Gangguan-kecemasan ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 22,
+   "Gender": "Perempuan",
+   "Age": 31,
+   "Tipe_Masalah": "Gangguan-stres-pascatrauma Depresi"
+ },
+ {
+   "USER_ID": 23,
+   "Gender": "Pria",
+   "Age": 29,
+   "Tipe_Masalah": "Depresi"
+ },
+ {
+   "USER_ID": 24,
+   "Gender": "Pria",
+   "Age": 28,
+   "Tipe_Masalah": "Gangguan-kecemasan Depresi Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 25,
+   "Gender": "Pria",
+   "Age": 39,
+   "Tipe_Masalah": "Depresi Gangguan-kecemasan"
+ },
+ {
+   "USER_ID": 26,
+   "Gender": "Pria",
+   "Age": 37,
+   "Tipe_Masalah": "Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 27,
+   "Gender": "Perempuan",
+   "Age": 34,
+   "Tipe_Masalah": "Gangguan-kecemasan Depresi"
+ },
+ {
+   "USER_ID": 28,
+   "Gender": "Perempuan",
+   "Age": 23,
+   "Tipe_Masalah": "Gangguan-kecemasan ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 29,
+   "Gender": "Perempuan",
+   "Age": 33,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 30,
+   "Gender": "Perempuan",
+   "Age": 35,
+   "Tipe_Masalah": "Skizofrenia Depresi"
+ },
+ {
+   "USER_ID": 31,
+   "Gender": "Perempuan",
+   "Age": 43,
+   "Tipe_Masalah": "Gangguan-stres-pascatrauma Gangguan-makan Depresi"
+ },
+ {
+   "USER_ID": 32,
+   "Gender": "Pria",
+   "Age": 42,
+   "Tipe_Masalah": "Gangguan-kecemasan Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 33,
+   "Gender": "Pria",
+   "Age": 42,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 34,
+   "Gender": "Pria",
+   "Age": 42,
+   "Tipe_Masalah": "Gangguan-stres-pascatrauma Depresi Gangguan-makan"
+ },
+ {
+   "USER_ID": 35,
+   "Gender": "Pria",
+   "Age": 32,
+   "Tipe_Masalah": "Gangguan-stres-pascatrauma Gangguan-kecemasan"
+ },
+ {
+   "USER_ID": 36,
+   "Gender": "Perempuan",
+   "Age": 23,
+   "Tipe_Masalah": "Skizofrenia ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 37,
+   "Gender": "Perempuan",
+   "Age": 40,
+   "Tipe_Masalah": "Gangguan-stres-pascatrauma ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 38,
+   "Gender": "Perempuan",
+   "Age": 26,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 39,
+   "Gender": "Pria",
+   "Age": 43,
+   "Tipe_Masalah": "Gangguan-kecemasan Gangguan-makan"
+ },
+ {
+   "USER_ID": 40,
+   "Gender": "Pria",
+   "Age": 44,
+   "Tipe_Masalah": "Skizofrenia Gangguan-makan"
+ },
+ {
+   "USER_ID": 41,
+   "Gender": "Perempuan",
+   "Age": 40,
+   "Tipe_Masalah": "Gangguan-kecemasan"
+ },
+ {
+   "USER_ID": 42,
+   "Gender": "Pria",
+   "Age": 21,
+   "Tipe_Masalah": "Gangguan-makan"
+ },
+ {
+   "USER_ID": 43,
+   "Gender": "Perempuan",
+   "Age": 40,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus Gangguan-kecemasan Depresi"
+ },
+ {
+   "USER_ID": 44,
+   "Gender": "Pria",
+   "Age": 35,
+   "Tipe_Masalah": "Skizofrenia Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 45,
+   "Gender": "Pria",
+   "Age": 27,
+   "Tipe_Masalah": "Skizofrenia ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 46,
+   "Gender": "Pria",
+   "Age": 37,
+   "Tipe_Masalah": "Skizofrenia"
+ },
+ {
+   "USER_ID": 47,
+   "Gender": "Pria",
+   "Age": 36,
+   "Tipe_Masalah": "Skizofrenia"
+ },
+ {
+   "USER_ID": 48,
+   "Gender": "Perempuan",
+   "Age": 20,
+   "Tipe_Masalah": "Depresi Gangguan-makan"
+ },
+ {
+   "USER_ID": 49,
+   "Gender": "Perempuan",
+   "Age": 31,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 50,
+   "Gender": "Perempuan",
+   "Age": 44,
+   "Tipe_Masalah": "Depresi"
+ },
+ {
+   "USER_ID": 51,
+   "Gender": "Pria",
+   "Age": 19,
+   "Tipe_Masalah": "Depresi Gangguan-kecemasan Gangguan-makan"
+ },
+ {
+   "USER_ID": 52,
+   "Gender": "Perempuan",
+   "Age": 30,
+   "Tipe_Masalah": "Depresi Skizofrenia"
+ },
+ {
+   "USER_ID": 53,
+   "Gender": "Perempuan",
+   "Age": 24,
+   "Tipe_Masalah": "Gangguan-makan Depresi"
+ },
+ {
+   "USER_ID": 54,
+   "Gender": "Pria",
+   "Age": 28,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 55,
+   "Gender": "Perempuan",
+   "Age": 33,
+   "Tipe_Masalah": "Skizofrenia"
+ },
+ {
+   "USER_ID": 56,
+   "Gender": "Pria",
+   "Age": 34,
+   "Tipe_Masalah": "Depresi Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 57,
+   "Gender": "Perempuan",
+   "Age": 43,
+   "Tipe_Masalah": "Depresi Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 58,
+   "Gender": "Pria",
+   "Age": 30,
+   "Tipe_Masalah": "Gangguan-kecemasan Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 59,
+   "Gender": "Pria",
+   "Age": 45,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus Depresi Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 60,
+   "Gender": "Pria",
+   "Age": 28,
+   "Tipe_Masalah": "Gangguan-makan Depresi"
+ },
+ {
+   "USER_ID": 61,
+   "Gender": "Pria",
+   "Age": 20,
+   "Tipe_Masalah": "Skizofrenia"
+ },
+ {
+   "USER_ID": 62,
+   "Gender": "Pria",
+   "Age": 31,
+   "Tipe_Masalah": "Gangguan-kecemasan Gangguan-makan"
+ },
+ {
+   "USER_ID": 63,
+   "Gender": "Pria",
+   "Age": 41,
+   "Tipe_Masalah": "Gangguan-stres-pascatrauma Gangguan-makan"
+ },
+ {
+   "USER_ID": 64,
+   "Gender": "Pria",
+   "Age": 30,
+   "Tipe_Masalah": "Depresi Gangguan-kecemasan Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 65,
+   "Gender": "Perempuan",
+   "Age": 43,
+   "Tipe_Masalah": "Skizofrenia ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 66,
+   "Gender": "Perempuan",
+   "Age": 39,
+   "Tipe_Masalah": "Gangguan-kecemasan Skizofrenia"
+ },
+ {
+   "USER_ID": 67,
+   "Gender": "Perempuan",
+   "Age": 21,
+   "Tipe_Masalah": "Depresi"
+ },
+ {
+   "USER_ID": 68,
+   "Gender": "Perempuan",
+   "Age": 32,
+   "Tipe_Masalah": "Depresi"
+ },
+ {
+   "USER_ID": 69,
+   "Gender": "Pria",
+   "Age": 22,
+   "Tipe_Masalah": "Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 70,
+   "Gender": "Pria",
+   "Age": 36,
+   "Tipe_Masalah": "Gangguan-makan Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 71,
+   "Gender": "Perempuan",
+   "Age": 45,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus Gangguan-kecemasan"
+ },
+ {
+   "USER_ID": 72,
+   "Gender": "Pria",
+   "Age": 45,
+   "Tipe_Masalah": "Gangguan-kecemasan"
+ },
+ {
+   "USER_ID": 73,
+   "Gender": "Perempuan",
+   "Age": 44,
+   "Tipe_Masalah": "Skizofrenia ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 74,
+   "Gender": "Pria",
+   "Age": 25,
+   "Tipe_Masalah": "Gangguan-stres-pascatrauma Gangguan-makan"
+ },
+ {
+   "USER_ID": 75,
+   "Gender": "Perempuan",
+   "Age": 28,
+   "Tipe_Masalah": "Skizofrenia Gangguan-makan"
+ },
+ {
+   "USER_ID": 76,
+   "Gender": "Pria",
+   "Age": 44,
+   "Tipe_Masalah": "Gangguan-makan Gangguan-kecemasan"
+ },
+ {
+   "USER_ID": 77,
+   "Gender": "Pria",
+   "Age": 20,
+   "Tipe_Masalah": "Depresi ADHD-Hiperaktif-dan-kurang-fokus Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 78,
+   "Gender": "Perempuan",
+   "Age": 28,
+   "Tipe_Masalah": "Skizofrenia ADHD-Hiperaktif-dan-kurang-fokus Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 79,
+   "Gender": "Perempuan",
+   "Age": 38,
+   "Tipe_Masalah": "Depresi Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 80,
+   "Gender": "Pria",
+   "Age": 22,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 81,
+   "Gender": "Perempuan",
+   "Age": 23,
+   "Tipe_Masalah": "Skizofrenia Gangguan-kecemasan"
+ },
+ {
+   "USER_ID": 82,
+   "Gender": "Perempuan",
+   "Age": 39,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus Depresi Gangguan-kecemasan"
+ },
+ {
+   "USER_ID": 83,
+   "Gender": "Perempuan",
+   "Age": 31,
+   "Tipe_Masalah": "Gangguan-kecemasan ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 84,
+   "Gender": "Perempuan",
+   "Age": 39,
+   "Tipe_Masalah": "Gangguan-kecemasan"
+ },
+ {
+   "USER_ID": 85,
+   "Gender": "Pria",
+   "Age": 43,
+   "Tipe_Masalah": "Skizofrenia ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 86,
+   "Gender": "Perempuan",
+   "Age": 30,
+   "Tipe_Masalah": "Skizofrenia"
+ },
+ {
+   "USER_ID": 87,
+   "Gender": "Pria",
+   "Age": 27,
+   "Tipe_Masalah": "Gangguan-kecemasan"
+ },
+ {
+   "USER_ID": 88,
+   "Gender": "Pria",
+   "Age": 22,
+   "Tipe_Masalah": "Gangguan-makan ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 89,
+   "Gender": "Perempuan",
+   "Age": 23,
+   "Tipe_Masalah": "Gangguan-makan"
+ },
+ {
+   "USER_ID": 90,
+   "Gender": "Pria",
+   "Age": 26,
+   "Tipe_Masalah": "Skizofrenia Gangguan-makan"
+ },
+ {
+   "USER_ID": 91,
+   "Gender": "Pria",
+   "Age": 35,
+   "Tipe_Masalah": "Depresi Gangguan-stres-pascatrauma"
+ },
+ {
+   "USER_ID": 92,
+   "Gender": "Perempuan",
+   "Age": 27,
+   "Tipe_Masalah": "Gangguan-makan ADHD-Hiperaktif-dan-kurang-fokus Skizofrenia"
+ },
+ {
+   "USER_ID": 93,
+   "Gender": "Pria",
+   "Age": 27,
+   "Tipe_Masalah": "Gangguan-makan ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 94,
+   "Gender": "Perempuan",
+   "Age": 31,
+   "Tipe_Masalah": "Depresi ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "USER_ID": 95,
+   "Gender": "Perempuan",
+   "Age": 34,
+   "Tipe_Masalah": "Skizofrenia"
+ },
+ {
+   "USER_ID": 96,
+   "Gender": "Perempuan",
+   "Age": 36,
+   "Tipe_Masalah": "Gangguan-stres-pascatrauma Gangguan-makan"
+ },
+ {
+   "USER_ID": 97,
+   "Gender": "Perempuan",
+   "Age": 21,
+   "Tipe_Masalah": "Skizofrenia"
+ },
+ {
+   "USER_ID": 98,
+   "Gender": "Perempuan",
+   "Age": 31,
+   "Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus Gangguan-kecemasan"
+ },
+ {
+   "USER_ID": 99,
+   "Gender": "Pria",
+   "Age": 21,
+   "Tipe_Masalah": "Skizofrenia"
+ },
+ {
+   "USER_ID": 100,
+   "Gender": "Perempuan",
+   "Age": 34,
+   "Tipe_Masalah": "Gangguan-stres-pascatrauma Gangguan-makan"
+ }
+]

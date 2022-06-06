@@ -1,0 +1,182 @@
+[
+ {
+   "CAREGIVER_ID": 1,
+   "Caregiver_Gender": "Perempuan",
+   "Caregiver_Age": 28,
+   "Caregiver_Tipe_Masalah": "Gangguan-stres-pascatrauma ADHD-Hiperaktif-dan-kurang-fokus Gangguan-makan"
+ },
+ {
+   "CAREGIVER_ID": 2,
+   "Caregiver_Gender": "Pria",
+   "Caregiver_Age": 33,
+   "Caregiver_Tipe_Masalah": "Skizofrenia Depresi"
+ },
+ {
+   "CAREGIVER_ID": 3,
+   "Caregiver_Gender": "Pria",
+   "Caregiver_Age": 19,
+   "Caregiver_Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "CAREGIVER_ID": 4,
+   "Caregiver_Gender": "Perempuan",
+   "Caregiver_Age": 18,
+   "Caregiver_Tipe_Masalah": "Gangguan-makan Skizofrenia"
+ },
+ {
+   "CAREGIVER_ID": 5,
+   "Caregiver_Gender": "Perempuan",
+   "Caregiver_Age": 36,
+   "Caregiver_Tipe_Masalah": "Skizofrenia Gangguan-kecemasan"
+ },
+ {
+   "CAREGIVER_ID": 6,
+   "Caregiver_Gender": "Pria",
+   "Caregiver_Age": 35,
+   "Caregiver_Tipe_Masalah": "Gangguan-stres-pascatrauma ADHD-Hiperaktif-dan-kurang-fokus Gangguan-kecemasan"
+ },
+ {
+   "CAREGIVER_ID": 7,
+   "Caregiver_Gender": "Pria",
+   "Caregiver_Age": 24,
+   "Caregiver_Tipe_Masalah": "Skizofrenia ADHD-Hiperaktif-dan-kurang-fokus Gangguan-stres-pascatrauma"
+ },
+ {
+   "CAREGIVER_ID": 8,
+   "Caregiver_Gender": "Pria",
+   "Caregiver_Age": 28,
+   "Caregiver_Tipe_Masalah": "Gangguan-makan Gangguan-stres-pascatrauma Skizofrenia"
+ },
+ {
+   "CAREGIVER_ID": 9,
+   "Caregiver_Gender": "Pria",
+   "Caregiver_Age": 27,
+   "Caregiver_Tipe_Masalah": "Gangguan-stres-pascatrauma"
+ },
+ {
+   "CAREGIVER_ID": 10,
+   "Caregiver_Gender": "Pria",
+   "Caregiver_Age": 27,
+   "Caregiver_Tipe_Masalah": "Gangguan-stres-pascatrauma"
+ },
+ {
+   "CAREGIVER_ID": 11,
+   "Caregiver_Gender": "Perempuan",
+   "Caregiver_Age": 28,
+   "Caregiver_Tipe_Masalah": "Gangguan-stres-pascatrauma ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "CAREGIVER_ID": 12,
+   "Caregiver_Gender": "Perempuan",
+   "Caregiver_Age": 19,
+   "Caregiver_Tipe_Masalah": "Skizofrenia"
+ },
+ {
+   "CAREGIVER_ID": 13,
+   "Caregiver_Gender": "Perempuan",
+   "Caregiver_Age": 33,
+   "Caregiver_Tipe_Masalah": "Gangguan-stres-pascatrauma Gangguan-makan"
+ },
+ {
+   "CAREGIVER_ID": 14,
+   "Caregiver_Gender": "Perempuan",
+   "Caregiver_Age": 22,
+   "Caregiver_Tipe_Masalah": "Skizofrenia ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "CAREGIVER_ID": 15,
+   "Caregiver_Gender": "Pria",
+   "Caregiver_Age": 38,
+   "Caregiver_Tipe_Masalah": "Gangguan-makan ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "CAREGIVER_ID": 16,
+   "Caregiver_Gender": "Perempuan",
+   "Caregiver_Age": 31,
+   "Caregiver_Tipe_Masalah": "Gangguan-makan Gangguan-stres-pascatrauma Depresi"
+ },
+ {
+   "CAREGIVER_ID": 17,
+   "Caregiver_Gender": "Perempuan",
+   "Caregiver_Age": 20,
+   "Caregiver_Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "CAREGIVER_ID": 18,
+   "Caregiver_Gender": "Pria",
+   "Caregiver_Age": 25,
+   "Caregiver_Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus Depresi Gangguan-kecemasan"
+ },
+ {
+   "CAREGIVER_ID": 19,
+   "Caregiver_Gender": "Pria",
+   "Caregiver_Age": 39,
+   "Caregiver_Tipe_Masalah": "Gangguan-makan Gangguan-kecemasan "
+ },
+ {
+   "CAREGIVER_ID": 20,
+   "Caregiver_Gender": "Perempuan",
+   "Caregiver_Age": 30,
+   "Caregiver_Tipe_Masalah": "Depresi Gangguan-makan"
+ },
+ {
+   "CAREGIVER_ID": 21,
+   "Caregiver_Gender": "Perempuan",
+   "Caregiver_Age": 39,
+   "Caregiver_Tipe_Masalah": "Gangguan-makan Gangguan-kecemasan"
+ },
+ {
+   "CAREGIVER_ID": 22,
+   "Caregiver_Gender": "Pria",
+   "Caregiver_Age": 29,
+   "Caregiver_Tipe_Masalah": "Gangguan-stres-pascatrauma Gangguan-makan Depresi"
+ },
+ {
+   "CAREGIVER_ID": 23,
+   "Caregiver_Gender": "Pria",
+   "Caregiver_Age": 36,
+   "Caregiver_Tipe_Masalah": "Depresi Gangguan-kecemasan"
+ },
+ {
+   "CAREGIVER_ID": 24,
+   "Caregiver_Gender": "Pria",
+   "Caregiver_Age": 39,
+   "Caregiver_Tipe_Masalah": "Gangguan-stres-pascatrauma Depresi Gangguan-kecemasan"
+ },
+ {
+   "CAREGIVER_ID": 25,
+   "Caregiver_Gender": "Perempuan",
+   "Caregiver_Age": 36,
+   "Caregiver_Tipe_Masalah": "Gangguan-makan Depresi"
+ },
+ {
+   "CAREGIVER_ID": 26,
+   "Caregiver_Gender": "Perempuan",
+   "Caregiver_Age": 24,
+   "Caregiver_Tipe_Masalah": "Depresi Skizofrenia Gangguan-stres-pascatrauma"
+ },
+ {
+   "CAREGIVER_ID": 27,
+   "Caregiver_Gender": "Pria",
+   "Caregiver_Age": 31,
+   "Caregiver_Tipe_Masalah": "Gangguan-makan Depresi ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "CAREGIVER_ID": 28,
+   "Caregiver_Gender": "Pria",
+   "Caregiver_Age": 22,
+   "Caregiver_Tipe_Masalah": "Skizofrenia"
+ },
+ {
+   "CAREGIVER_ID": 29,
+   "Caregiver_Gender": "Perempuan",
+   "Caregiver_Age": 28,
+   "Caregiver_Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus"
+ },
+ {
+   "CAREGIVER_ID": 30,
+   "Caregiver_Gender": "Perempuan",
+   "Caregiver_Age": 32,
+   "Caregiver_Tipe_Masalah": "ADHD-Hiperaktif-dan-kurang-fokus"
+ }
+]

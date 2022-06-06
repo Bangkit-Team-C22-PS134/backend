@@ -1,0 +1,102 @@
+USER_ID,Gender,Age,Tipe Masalah,CAREGIVEN_ID
+1,Pria,33,ADHD (Hiperaktif dan kurang fokus),3
+2,Pria,29,"Gangguan stres pascatrauma,Gangguan makan",13
+3,Perempuan,32,"ADHD (Hiperaktif dan kurang fokus),Gangguan kecemasan",6
+4,Perempuan,44,Skizofrenia,12
+5,Pria,21,Skizofrenia,12
+6,Perempuan,18,"Depresi,ADHD (Hiperaktif dan kurang fokus)",18
+7,Pria,38,"Gangguan makan,ADHD (Hiperaktif dan kurang fokus)",15
+8,Pria,31,"Gangguan makan,ADHD (Hiperaktif dan kurang fokus),Skizofrenia",27
+9,Pria,35,"Depresi,Gangguan stres pascatrauma",24
+10,Pria,27,"Skizofrenia,Gangguan makan",4
+11,Pria,34,Gangguan makan,19
+12,Pria,44,"Gangguan makan,ADHD (Hiperaktif dan kurang fokus)",15
+13,Perempuan,37,Gangguan kecemasan,5
+14,Pria,39,Skizofrenia,12
+15,Pria,28,"Skizofrenia,ADHD (Hiperaktif dan kurang fokus)",14
+16,Pria,40,Gangguan kecemasan,5
+17,Pria,39,"Gangguan kecemasan,ADHD (Hiperaktif dan kurang fokus)",6
+18,Pria,23,"ADHD (Hiperaktif dan kurang fokus),Depresi,Gangguan kecemasan",18
+19,Perempuan,27,"Skizofrenia,Gangguan kecemasan",5
+20,Pria,44,ADHD (Hiperaktif dan kurang fokus),3
+21,Perempuan,31,"Depresi,Gangguan stres pascatrauma",24
+22,Perempuan,31,"Skizofrenia,ADHD (Hiperaktif dan kurang fokus),Gangguan stres pascatrauma",7
+23,Pria,29,"Depresi,ADHD (Hiperaktif dan kurang fokus),Gangguan stres pascatrauma",1
+24,Pria,28,"Gangguan makan,Gangguan kecemasan",21
+25,Pria,39,"Skizofrenia,Gangguan makan",4
+26,Pria,37,"Gangguan stres pascatrauma,Gangguan makan",13
+27,Perempuan,34,"Skizofrenia,ADHD (Hiperaktif dan kurang fokus)",14
+28,Perempuan,23,Gangguan kecemasan,5
+29,Perempuan,33,"ADHD (Hiperaktif dan kurang fokus),Gangguan kecemasan",6
+30,Perempuan,35,"Gangguan makan,Gangguan stres pascatrauma",13
+31,Perempuan,43,Gangguan stres pascatrauma,10
+32,Pria,42,Depresi,18
+33,Pria,42,Depresi,16
+34,Pria,42,"Gangguan kecemasan,Skizofrenia",5
+3,Pria,32,Skizofrenia,28
+5,Pria,25,"Gangguan stres pascatrauma,Gangguan makan",16
+36,Perempuan,23,"Skizofrenia,ADHD (Hiperaktif dan kurang fokus)",14
+37,Perempuan,40,"Depresi,Gangguan kecemasan,Gangguan stres pascatrauma",24
+38,Perempuan,26,"Gangguan stres pascatrauma,Gangguan makan",16
+39,Pria,43,"Gangguan kecemasan,Gangguan makan",21
+40,Pria,44,Skizofrenia,28
+41,Perempuan,40,"Gangguan makan,Depresi",25
+42,Pria,21,"ADHD (Hiperaktif dan kurang fokus),Depresi,Gangguan stres pascatrauma",18
+43,Perempuan,40,"Gangguan kecemasan,Gangguan stres pascatrauma",9
+44,Pria,35,"Depresi,Gangguan stres pascatrauma",16
+45,Pria,27,"Depresi,Gangguan stres pascatrauma",22
+46,Pria,37,Skizofrenia,28
+47,Pria,36,"ADHD (Hiperaktif dan kurang fokus),Gangguan stres pascatrauma",1
+48,Perempuan,20,"Gangguan makan,Depresi",25
+49,Perempuan,31,"Depresi,Skizofrenia",2
+50,Perempuan,44,"Depresi,Gangguan kecemasan,Gangguan makan",20
+51,Pria,19,Depresi,27
+52,Perempuan,30,"ADHD (Hiperaktif dan kurang fokus),Gangguan stres pascatrauma",11
+53,Perempuan,24,"Depresi,Gangguan makan",25
+54,Pria,28,Skizofrenia,8
+55,Perempuan,33,Skizofrenia,8
+56,Pria,34,"Skizofrenia,ADHD (Hiperaktif dan kurang fokus)",7
+57,Perempuan,43,"Skizofrenia,Gangguan stres pascatrauma",7
+58,Pria,30,"ADHD (Hiperaktif dan kurang fokus),Gangguan kecemasan,Depresi",23
+59,Pria,45,Gangguan makan,19
+60,Pria,28,Gangguan kecemasan,19
+61,Pria,20,"Skizofrenia,Gangguan maka",4
+62,Pria,31,"Gangguan kecemasan,Gangguan makan",21
+63,Pria,41,ADHD (Hiperaktif dan kurang fokus),3
+64,Pria,30,"Gangguan stres pascatrauma,ADHD (Hiperaktif dan kurang fokus)",11
+65,Perempuan,43,"Skizofrenia,ADHD (Hiperaktif dan kurang fokus)",29
+66,Perempuan,39,"Gangguan stres pascatrauma,Gangguan kecemasan",9
+67,Perempuan,21,"Gangguan stres pascatrauma,Depresi,Gangguan makan",1
+68,Perempuan,32,ADHD (Hiperaktif dan kurang fokus),29
+69,Pria,22,"Gangguan kecemasan,Gangguan stres pascatrauma",9
+70,Pria,36,"Gangguan stres pascatrauma,Gangguan makan,Depresi",22
+71,Perempuan,45,"Skizofrenia,Depresi",2
+72,Pria,45,ADHD (Hiperaktif dan kurang fokus),17
+73,Perempuan,44,"Gangguan kecemasan,ADHD (Hiperaktif dan kurang fokus)",29
+74,Pria,25,"Gangguan kecemasan,Depresi",23
+75,Perempuan,28,Gangguan stres pascatrauma,10
+76,Pria,44,"Depresi,Gangguan kecemasan",23
+77,Pria,20,"Gangguan kecemasan,Depresi,Gangguan stres pascatrauma",23
+78,Perempuan,28,Depresi,26
+79,Perempuan,38,"Gangguan stres pascatrauma,Depresi",22
+80,Pria,22,"Depresi,Gangguan kecemasan,ADHD (Hiperaktif dan kurang fokus)",30
+81,Perempuan,23,"ADHD (Hiperaktif dan kurang fokus),Skizofrenia,Gangguan stres pascatrauma",30
+82,Perempuan,39,"Depresi,Skizofrenia",26
+83,Perempuan,31,Gangguan kecemasan,24
+84,Perempuan,39,Skizofrenia,2
+85,Pria,43,"Depresi,Skizofrenia",2
+86,Perempuan,30,"Gangguan makan,Depresi",20
+87,Pria,27,"Gangguan makan,Depresi",20
+88,Pria,22,"ADHD (Hiperaktif dan kurang fokus),Gangguan stres pascatrauma",11
+89,Perempuan,23,"ADHD (Hiperaktif dan kurang fokus),Gangguan makan",15
+90,Pria,26,"Depresi,Skizofrenia",26
+91,Pria,35,Depresi,20
+92,Perempuan,27,"Gangguan stres pascatrauma,Depresi",10
+93,Pria,27,"Skizofrenia,Depresi,ADHD (Hiperaktif dan kurang fokus)",30
+94,Perempuan,31,"ADHD (Hiperaktif dan kurang fokus),Gangguan kecemasan",17
+95,Perempuan,34,Gangguan stres pascatrauma,22
+96,Perempuan,36,"ADHD (Hiperaktif dan kurang fokus),Gangguan kecemasan",17
+97,Perempuan,21,"Skizofrenia,Depresi",26
+98,Perempuan,31,"Depresi,Gangguan makan",27
+99,Pria,21,"Depresi,Gangguan makan",27
+100,Perempuan,34,"Skizofrenia,Gangguan makan",8
