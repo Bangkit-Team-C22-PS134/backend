@@ -1,12 +1,13 @@
 import os
 
+import pandas as pd
 from flask import Flask, jsonify, json, request
 from flask_restful import Api, Resource, reqparse, abort
 import threading
 import logging
 from keras.models import load_model
 from  circle_data_model import  circle_utility
-from circle_data_model import  generate_saved_model
+from circle_data_model import generate_saved_model
 import tensorflow_recommenders as tfrs
 from werkzeug.exceptions import BadRequest
 from firebase_admin import credentials, firestore, initialize_app
@@ -63,7 +64,7 @@ def on_snapshot_chatRoomPrefs(doc_snapshot, changes, read_time):
     caregiver_ds = circle_utility.df_to_dataset(data)
     # update this
     TEXT_INDEX.index_from_dataset(
-        caregiver_ds.map(lambda features: (features['CAREGIVER_ID'], MAIN_TEXT_MODEL([features['text']])))
+       caregiver_ds.map(lambda features: (features['CAREGIVER_ID'], MAIN_TEXT_MODEL([features['text']])))
     )
 
 
@@ -157,15 +158,13 @@ api.add_resource(match_user_resource, "/user/<string:id>")
 @app.route("/user/match", methods=["GET"])
 def match_user():
     # get data from firestore and check if its exist
-    user_id = request.form.get("user_id")
-    print(request.form.get("user_id"))
-    if(user_id is None):
+    user_id = request.args.get("user_id", "notvalid")
+    k_value = int(request.args.get("k_value", 3))
+    if (user_id is None):
         return "id is not provided", 400
 
     check_api_keys(request.headers.get('user-api-key'))
-    print("api key")
     data = db_ref_userPref.document(str(user_id)).get()
-    print(data.to_dict())
     abort_if_user_id_doesnt_exist(data)
 
     # process the data
@@ -177,7 +176,7 @@ def match_user():
     for k, v in data.items():
         data[k] = [v]
 
-    _, recommendation = INDEX(data, k=1)
+    _, recommendation = INDEX(data, k=k_value)
     data = {
         "recommendation": recommendation[0].numpy().tolist()
     }

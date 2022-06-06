@@ -158,15 +158,13 @@ api.add_resource(match_user_resource, "/user/<string:id>")
 @app.route("/user/match", methods=["GET"])
 def match_user():
     # get data from firestore and check if its exist
-    user_id = request.form.get("user_id")
-    print(request.form.get("user_id"))
-    if(user_id is None):
+    user_id = request.args.get("user_id", "notvalid")
+    k_value = int(request.args.get("k_value", 3))
+    if (user_id is None):
         return "id is not provided", 400
 
     check_api_keys(request.headers.get('user-api-key'))
-    print("api key")
     data = db_ref_userPref.document(str(user_id)).get()
-    print(data.to_dict())
     abort_if_user_id_doesnt_exist(data)
 
     # process the data
@@ -178,7 +176,7 @@ def match_user():
     for k, v in data.items():
         data[k] = [v]
 
-    _, recommendation = INDEX(data, k=1)
+    _, recommendation = INDEX(data, k=k_value)
     data = {
         "recommendation": recommendation[0].numpy().tolist()
     }
@@ -195,4 +193,4 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)  # dont run debug true if its in production
+    app.run(debug=False)  # dont run debug true if its in production
