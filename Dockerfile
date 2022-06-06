@@ -5,8 +5,6 @@ COPY resources/ app/resources/
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-WORKDIR /app
-CMD exec python3 generate_saved_model
 
 WORKDIR /app/src
 
