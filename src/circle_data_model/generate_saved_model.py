@@ -210,7 +210,7 @@ model.compile(optimizer='adam',
               loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
               metrics=['accuracy'])
 model.fit(user_ds,
-          epochs=1)
+          epochs=50)
 
 def return_model():
     return [model_nlm_v1,model.user_model,model.caregiver_model]
