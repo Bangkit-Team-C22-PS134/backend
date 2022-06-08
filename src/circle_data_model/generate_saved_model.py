@@ -171,8 +171,7 @@ class RecomendModel(tfrs.Model):
     
     
     # We pick out the user features and pass them into the user model.
-    
-    print("AAAAAAAAAAAAAAAAAA")
+
     user_embeddings = self.user_model({
         'Age':features['Age'],
         'Gender':features['Gender'],
@@ -183,7 +182,6 @@ class RecomendModel(tfrs.Model):
         'Gangguan-stres-pascatrauma':features['Gangguan-stres-pascatrauma'],
         'Skizofrenia':features['Skizofrenia']
     })
-    print("BBBBBBBBBBBBBB")
     # And pick out the movie features and pass them into the movie model,
     # getting embeddings back.
     positive_movie_embeddings = self.caregiver_model({
@@ -212,7 +210,7 @@ model.compile(optimizer='adam',
               loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
               metrics=['accuracy'])
 model.fit(user_ds,
-          epochs=50)
+          epochs=1)
 
 def return_model():
     return [model_nlm_v1,model.user_model,model.caregiver_model]

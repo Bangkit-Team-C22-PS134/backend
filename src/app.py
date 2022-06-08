@@ -7,23 +7,20 @@ import threading
 import logging
 from keras.models import load_model
 from  circle_data_model import  circle_utility
-from circle_data_model import generate_saved_model
 import tensorflow_recommenders as tfrs
+from  circle_data_model import Mode_Data_Manager
 from werkzeug.exceptions import BadRequest
 from firebase_admin import credentials, firestore, initialize_app
 
 app = Flask(__name__)
 api = Api(app)
 # this set up ML model
-MAIN_TEXT_MODEL = generate_saved_model.model_nlm_v1
-MAIN_USER_MODEL =  generate_saved_model.model.user_model
-MAIN_CAREGIVER_MODEL = generate_saved_model.model.caregiver_model
-TEXT_INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_TEXT_MODEL)
-INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_USER_MODEL)
+MAIN_TEXT_MODEL = Mode_Data_Manager.MAIN_TEXT_MODEL
+MAIN_USER_MODEL =  Mode_Data_Manager.MAIN_USER_MODEL
+MAIN_CAREGIVER_MODEL = Mode_Data_Manager.MAIN_CAREGIVER_MODEL
+TEXT_INDEX = Mode_Data_Manager.TEXT_INDEX
+INDEX = Mode_Data_Manager.INDEX
 
-#Variable for dataframe
-CAREGIVER_DATAFRAME = None
-CAREGIVER_DS = None
 
 # this set up firestore auth and client , also using environment variable to store private key
 cred = credentials.Certificate(json.loads(os.environ["FIREBASE_KEY"] , strict=False))
