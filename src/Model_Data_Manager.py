@@ -1,7 +1,5 @@
 from circle_data_model import generate_saved_model
 from circle_data_model import circle_utility
-import tensorflow as tf
-import pandas as pd
 import numpy as np
 import tensorflow_recommenders as tfrs
 
