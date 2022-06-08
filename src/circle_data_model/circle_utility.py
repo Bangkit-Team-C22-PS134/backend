@@ -33,12 +33,19 @@ def fill_non_existent_column(df, is_caregiver=False):
         else:
             df[col] = 0
 
-def df_to_dataset(dataframe, shuffle=True, batch_size=32):
+def df_to_dataset(dataframe, shuffle=True, batch_size=32, text_processed=False):
     """
     A utility method to create a tf.data dataset from a Pandas Dataframe
     """
     dataframe = dataframe.copy()
-    ds = tf.data.Dataset.from_tensor_slices(dict(dataframe))
+    if(text_processed):
+        processed_text = dataframe.pop('text_processed')
+        ds = tf.data.Dataset.from_tensor_slices(dict(dataframe))
+        ds_processed = tf.data.Dataset.from_tensors(dict(processed_text))
+        ds = tf.data.Dataset.zip((ds,ds_processed))
+    else:
+        ds = tf.data.Dataset.from_tensor_slices(dict(dataframe))
+
     if shuffle:
         ds = ds.shuffle(buffer_size=len(dataframe))
     ds = ds.batch(batch_size)
@@ -86,9 +93,9 @@ def unpack_caregiver_snapshot(data):
     :param data: data is a snapshot list of chatroom collection
     :return: list of caregiver in form of dictionary
     """
-    desired_keys = ["problems", "birthday", "gender", "caregiver_id", "text"]
+    desired_keys = ["problems", "birthday", "gender", "caregiver_id", "text", "user_id"]
     # this unpack the value of snapshot list and turn the snapshot into dictionary also add aditional key for caregiver_id
-    caregiver_dict_unpacked = map(lambda feature: Merge(feature.to_dict(), {'caregiver_id': feature.id}), data)
+    caregiver_dict_unpacked = map(lambda feature: Merge(feature.to_dict(), {'caregiver_id': feature.id, 'user_id':feature.to_dict()['caregiver'].id}), data)
 
     # this unpack the snapshot in 'caregiver' snapshot and add them back to main dictionary
     caregiver_dict = map(lambda feature: Merge(feature, feature.pop('caregiver').get().to_dict()),

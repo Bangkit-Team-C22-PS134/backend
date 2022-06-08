@@ -1,26 +1,14 @@
-import os
-
-import pandas as pd
-from flask import Flask, jsonify, json, request
+from flask import Flask, json, request
 from flask_restful import Api, Resource, reqparse, abort
 import threading
 import logging
-from keras.models import load_model
 from  circle_data_model import  circle_utility
-import tensorflow_recommenders as tfrs
-from  circle_data_model import Mode_Data_Manager
+from src import Model_Data_Manager
 from werkzeug.exceptions import BadRequest
 from firebase_admin import credentials, firestore, initialize_app
 
 app = Flask(__name__)
 api = Api(app)
-# this set up ML model
-MAIN_TEXT_MODEL = Mode_Data_Manager.MAIN_TEXT_MODEL
-MAIN_USER_MODEL =  Mode_Data_Manager.MAIN_USER_MODEL
-MAIN_CAREGIVER_MODEL = Mode_Data_Manager.MAIN_CAREGIVER_MODEL
-TEXT_INDEX = Mode_Data_Manager.TEXT_INDEX
-INDEX = Mode_Data_Manager.INDEX
-
 
 # this set up firestore auth and client , also using environment variable to store private key
 cred = credentials.Certificate(json.loads(os.environ["FIREBASE_KEY"] , strict=False))
@@ -28,7 +16,7 @@ default_app = initialize_app(cred)
 db = firestore.client()
 db_ref_userPref = db.collection('users')
 db_key = db.collection('api_keys').document("matching_setting_api_keys")
-db_chat_room_pref = db.collection('chat_room_pref')
+db_chat_room_pref = db.collection('chat_room_pref').where(u'is_open',u'==',True)
 
 # this set up the api resources and request json
 video_post_args = reqparse.RequestParser()
@@ -55,20 +43,7 @@ def on_snapshot_apikey(doc_snapshot, changes, read_time):
 
 # Create a callback on_snapshot function to capture changes
 def on_snapshot_chatRoomPrefs(doc_snapshot, changes, read_time):
-    global INDEX , TEXT_INDEX
-    data = circle_utility.unpack_caregiver_snapshot(doc_snapshot)
-    data = circle_utility.convert_caregiver_dictList_to_df(data)
-    caregiver_ds = circle_utility.df_to_dataset(data)
-    # update this
-    TEXT_INDEX.index_from_dataset(
-       caregiver_ds.map(lambda features: (features['CAREGIVER_ID'], MAIN_TEXT_MODEL([features['text']])))
-    )
-
-
-    # update_this
-    INDEX.index_from_dataset(
-        caregiver_ds.map(lambda features: (features['CAREGIVER_ID'], MAIN_CAREGIVER_MODEL(features)))
-    )
+    Model_Data_Manager.generate_dataframe(doc_snapshot)
     callback_done_apikey.set()
 
 # Watch the document
@@ -82,7 +57,6 @@ def get_error_msg():
 
 
 def abort_if_user_id_doesnt_exist(data):
-    print("from func" , data.exists)
     if (not data.exists):
         abort(404, message="Could not find the user...")
 
@@ -101,56 +75,6 @@ class match_user_resource(Resource):
         # mulai processing metode get
         # return list semua user
         return 0
-
-
-class Video(Resource):
-    def get(self, id):
-        #mulai processing metode get
-
-        try:
-            args = video_post_args.parse_args()
-            check_api_keys(request.headers.get('user-api-key'))
-
-            data = db_ref_userPref.document(id).get()
-            abort_if_user_id_doesnt_exist(data)
-            return json.dumps(data.to_dict()), 200
-        except BadRequest as e:
-            print(request)
-            return str(e), 400
-        except Exception as e:
-            logging.exception(e)
-            return str(e), 500
-
-    def post(self, id):
-        try:
-            args = video_post_args.parse_args()
-            check_api_keys(args['api_key'])
-
-            abort_if_video_exists(id)
-
-            db_ref_userPref.document(id).set(args)
-            return json.dumps({"success": True}), 200
-        except BadRequest as e:
-            return str(e), 400
-        except Exception as e:
-            logging.exception(e)
-            return str(e), 500
-
-    def delete(self, id):
-        try:
-            args = video_post_args.parse_args()
-            check_api_keys(args['api_key'])
-
-            abort_if_user_id_doesnt_exist(id)
-            return '', 204
-        except BadRequest as e:
-            return str(e), 400
-        except Exception as e:
-            logging.exception(e)
-            return str(e), 500
-
-api.add_resource(Video, "/video/<string:id>")
-api.add_resource(match_user_resource, "/user/<string:id>")
 
 @app.route("/user/match", methods=["GET"])
 def match_user():
@@ -173,7 +97,7 @@ def match_user():
     for k, v in data.items():
         data[k] = [v]
 
-    _, recommendation = INDEX(data, k=k_value)
+    recommendation = Model_Data_Manager.predict(user_id,data,k_value)
     data = {
         "recommendation": recommendation[0].numpy().tolist()
     }
