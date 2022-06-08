@@ -1,11 +1,10 @@
 from flask import Flask, json, request
 from flask_restful import Api, Resource, reqparse, abort
 import threading
-import logging
-from  circle_data_model import  circle_utility
-from src import Model_Data_Manager
-from werkzeug.exceptions import BadRequest
+from circle_data_model import circle_utility
+import Model_Data_Manager
 from firebase_admin import credentials, firestore, initialize_app
+import os
 
 app = Flask(__name__)
 api = Api(app)

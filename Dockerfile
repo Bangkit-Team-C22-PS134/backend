@@ -3,6 +3,9 @@ From python:3.9.11
 COPY src/ app/src/
 COPY resources/ app/resources/
 COPY requirements.txt .
+
+RUN pip install --upgrade cython
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install pandas
 RUN pip3 install pandas
