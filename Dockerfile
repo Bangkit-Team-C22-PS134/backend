@@ -4,6 +4,8 @@ COPY src/ app/src/
 COPY resources/ app/resources/
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install pandas
+RUN pip3 install pandas
 
 
 WORKDIR /app/src
