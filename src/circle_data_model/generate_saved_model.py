@@ -147,14 +147,14 @@ class RecomendModel(tfrs.Model):
     self.user_model = tf.keras.Sequential([
         feature_layer_user,
         layers.Dense(64),
-        layers.Dense(32)
+        layers.Dense(32, activation="linear")
     ])
 
     # Set up a model for representing caregiver.
     self.caregiver_model = tf.keras.Sequential([
         feature_layer_caregiver,
         layers.Dense(64),
-        layers.Dense(32)
+        layers.Dense(32, activation="linear")
     ])
 
     # Set up a task to optimize the model and compute metrics.
@@ -184,7 +184,7 @@ class RecomendModel(tfrs.Model):
     })
     # And pick out the movie features and pass them into the movie model,
     # getting embeddings back.
-    positive_movie_embeddings = self.caregiver_model({
+    positive_caregiver_embeddings = self.caregiver_model({
         'Caregiver_Age':features['Caregiver_Age'],
         'Caregiver_Gender':features['Caregiver_Gender'],
         'Caregiver-ADHD-Hiperaktif-dan-kurang-fokus':features['Caregiver-ADHD-Hiperaktif-dan-kurang-fokus'],
@@ -199,7 +199,7 @@ class RecomendModel(tfrs.Model):
 
     # The task computes the loss and the metrics.
 
-    return self.task(user_embeddings, positive_movie_embeddings, compute_metrics=not training)
+    return self.task(user_embeddings, positive_caregiver_embeddings, compute_metrics=not training)
 
 caregiver_features = ['Caregiver_Gender', 'Caregiver_Age',  'Caregiver-ADHD-Hiperaktif-dan-kurang-fokus', 'Caregiver-Depresi', 'Caregiver-Gangguan-kecemasan', 'Caregiver-Gangguan-makan', 'Caregiver-Gangguan-stres-pascatrauma', 'Caregiver-Skizofrenia']
 user_features = ['Gender', 'Age', 'ADHD-Hiperaktif-dan-kurang-fokus', 'Depresi', 'Gangguan-kecemasan', 'Gangguan-makan','Gangguan-stres-pascatrauma', 'Skizofrenia']
