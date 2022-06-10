@@ -68,6 +68,7 @@ def abort_if_video_exists(id):
 
 
 def check_api_keys(key):
+    global api_key
     if(api_key is None):
         api_key = db_key.get()
     if (api_key != key):
