@@ -132,76 +132,153 @@ feature_columns.append(indicator_column)
 
 feature_layer_caregiver= tf.keras.layers.DenseFeatures(feature_columns)
 
+
 class RecomendModel(tfrs.Model):
 
-  def __init__(self):
-    super().__init__()
+    def __init__(self):
+        super().__init__()
 
-    embedding_dimension = 32
+        embedding_dimension = 32
 
-    # Set up a model for representing users.
-    self.user_model = tf.keras.Sequential([
-        feature_layer_user,
-        layers.Dense(64),
-        layers.Dense(32, activation="linear")
-    ])
+        # Set up a model for representing users.
+        self.user_model = tf.keras.Sequential([
+            self.generate_user_dense_feature(),
+            layers.Dense(64),
+            layers.Dense(32, activation="linear")
+        ])
 
-    # Set up a model for representing caregiver.
-    self.caregiver_model = tf.keras.Sequential([
-        feature_layer_caregiver,
-        layers.Dense(64),
-        layers.Dense(32, activation="linear")
-    ])
+        # Set up a model for representing caregiver.
+        self.caregiver_model = tf.keras.Sequential([
+            self.generate_caregiver_dense_feature(),
+            layers.Dense(64),
+            layers.Dense(32, activation="linear")
+        ])
 
-    # Set up a task to optimize the model and compute metrics.
-    self.task = tfrs.tasks.Retrieval(
-      metrics=tfrs.metrics.FactorizedTopK(
-        candidates=caregiver_ds.batch(5).map(self.caregiver_model)
-      )
-    )
+        # Set up a task to optimize the model and compute metrics.
+        self.task = tfrs.tasks.Retrieval(
+            metrics=tfrs.metrics.FactorizedTopK(
+                candidates=caregiver_ds.batch(5).map(self.caregiver_model)
+            )
+        )
 
-  def compute_loss(self, features: Dict[Text, tf.Tensor], training=False) -> tf.Tensor:
-    
-    caregiver_features = ['Caregiver_Gender', 'Caregiver_Age',  'Caregiver-ADHD-Hiperaktif-dan-kurang-fokus', 'Caregiver-Depresi', 'Caregiver-Gangguan-kecemasan', 'Caregiver-Gangguan-makan', 'Caregiver-Gangguan-stres-pascatrauma', 'Caregiver-Skizofrenia']
-    user_features = ['Gender', 'Age', 'ADHD-Hiperaktif-dan-kurang-fokus', 'Depresi', 'Gangguan-kecemasan', 'Gangguan-makan','Gangguan-stres-pascatrauma', 'Skizofrenia']
-    
-    
-    # We pick out the user features and pass them into the user model.
+    def generate_user_dense_feature(self):
+        feature_columns = []
 
-    user_embeddings = self.user_model({
-        'Age':features['Age'],
-        'Gender':features['Gender'],
-        'ADHD-Hiperaktif-dan-kurang-fokus':features['ADHD-Hiperaktif-dan-kurang-fokus'],
-        'Depresi':features['Depresi'],
-        'Gangguan-kecemasan':features['Gangguan-kecemasan'],
-        'Gangguan-makan':features['Gangguan-makan'],
-        'Gangguan-stres-pascatrauma':features['Gangguan-stres-pascatrauma'],
-        'Skizofrenia':features['Skizofrenia']
-    })
-    # And pick out the movie features and pass them into the movie model,
-    # getting embeddings back.
-    positive_caregiver_embeddings = self.caregiver_model({
-        'Caregiver_Age':features['Caregiver_Age'],
-        'Caregiver_Gender':features['Caregiver_Gender'],
-        'Caregiver-ADHD-Hiperaktif-dan-kurang-fokus':features['Caregiver-ADHD-Hiperaktif-dan-kurang-fokus'],
-        'Caregiver-Depresi':features['Caregiver-Depresi'],
-        'Caregiver-Gangguan-kecemasan':features['Caregiver-Gangguan-kecemasan'],
-        'Caregiver-Gangguan-makan':features['Caregiver-Gangguan-makan'],
-        'Caregiver-Gangguan-stres-pascatrauma':features['Caregiver-Gangguan-stres-pascatrauma'],
-        'Caregiver-Skizofrenia':features['Caregiver-Skizofrenia']
-        
-    })
-    
+        number_feature = ["Age"]
+        number_feature += unique_masalah_user.tolist()
+        # numeric cols
+        for header in number_feature:
+            feature_columns.append(feature_column.numeric_column(header))
 
-    # The task computes the loss and the metrics.
+        age_feature = ["Age"]
+        for col in age_feature:
+            age = feature_column.numeric_column(col)
+            age_buckets = feature_column.bucketized_column(age, boundaries=[17, 21, 25, 29, 33, 37, 41, 46])
+            feature_columns.append(age_buckets)
 
-    return self.task(user_embeddings, positive_caregiver_embeddings, compute_metrics=not training)
+        indicator_column_names = ['Gender']
+        for col_name in indicator_column_names:
+            categorical_column = feature_column.categorical_column_with_vocabulary_list(
+                col_name, user_dataframe[col_name].unique())
+            indicator_column = feature_column.indicator_column(categorical_column)
+            feature_columns.append(indicator_column)
+
+        return tf.keras.layers.DenseFeatures(feature_columns)
+
+    def generate_caregiver_dense_feature(self):
+        feature_columns = []
+
+        number_feature = ["Caregiver_Age"]
+        number_feature += unique_masalah_caregiver
+        # numeric cols
+
+        for header in number_feature:
+            feature_columns.append(feature_column.numeric_column(header))
+
+        age_feature = ["Caregiver_Age"]
+        for col in age_feature:
+            age = feature_column.numeric_column(col)
+            age_buckets = feature_column.bucketized_column(age, boundaries=[17, 21, 25, 29, 33, 37, 41, 46])
+            feature_columns.append(age_buckets)
+
+        col_name = 'Caregiver_Gender'
+        categorical_column = feature_column.categorical_column_with_vocabulary_list(
+            col_name, user_dataframe[col_name].unique())
+        indicator_column = feature_column.indicator_column(categorical_column)
+        feature_columns.append(indicator_column)
+
+        return tf.keras.layers.DenseFeatures(feature_columns)
+
+    def call(self, features: Dict[Text, tf.Tensor], training=False) -> tf.Tensor:
+        user_embeddings = self.user_model({
+            'Age': [features['Age']],
+            'Gender': [features['Gender']],
+            'ADHD-Hiperaktif-dan-kurang-fokus': [features['ADHD-Hiperaktif-dan-kurang-fokus']],
+            'Depresi': [features['Depresi']],
+            'Gangguan-kecemasan': [features['Gangguan-kecemasan']],
+            'Gangguan-makan': [features['Gangguan-makan']],
+            'Gangguan-stres-pascatrauma': [features['Gangguan-stres-pascatrauma']],
+            'Skizofrenia': [features['Skizofrenia']]
+        })
+        # And pick out the movie features and pass them into the movie model,
+        # getting embeddings back.
+        positive_caregiver_embeddings = self.caregiver_model({
+            'Caregiver_Age': [features['Caregiver_Age']],
+            'Caregiver_Gender': [features['Caregiver_Gender']],
+            'Caregiver-ADHD-Hiperaktif-dan-kurang-fokus': [features['Caregiver-ADHD-Hiperaktif-dan-kurang-fokus']],
+            'Caregiver-Depresi': [features['Caregiver-Depresi']],
+            'Caregiver-Gangguan-kecemasan': [features['Caregiver-Gangguan-kecemasan']],
+            'Caregiver-Gangguan-makan': [features['Caregiver-Gangguan-makan']],
+            'Caregiver-Gangguan-stres-pascatrauma': [features['Caregiver-Gangguan-stres-pascatrauma']],
+            'Caregiver-Skizofrenia': [features['Caregiver-Skizofrenia']]
+
+        })
+        return tf.concat([positive_caregiver_embeddings, user_embeddings], 0)
+
+    def compute_loss(self, features: Dict[Text, tf.Tensor], training=False) -> tf.Tensor:
+
+        caregiver_features = ['Caregiver_Gender', 'Caregiver_Age', 'Caregiver-ADHD-Hiperaktif-dan-kurang-fokus',
+                              'Caregiver-Depresi', 'Caregiver-Gangguan-kecemasan', 'Caregiver-Gangguan-makan',
+                              'Caregiver-Gangguan-stres-pascatrauma', 'Caregiver-Skizofrenia']
+        user_features = ['Gender', 'Age', 'ADHD-Hiperaktif-dan-kurang-fokus', 'Depresi', 'Gangguan-kecemasan',
+                         'Gangguan-makan', 'Gangguan-stres-pascatrauma', 'Skizofrenia']
+
+        # We pick out the user features and pass them into the user model.
+
+        user_embeddings = self.user_model({
+            'Age': features['Age'],
+            'Gender': features['Gender'],
+            'ADHD-Hiperaktif-dan-kurang-fokus': features['ADHD-Hiperaktif-dan-kurang-fokus'],
+            'Depresi': features['Depresi'],
+            'Gangguan-kecemasan': features['Gangguan-kecemasan'],
+            'Gangguan-makan': features['Gangguan-makan'],
+            'Gangguan-stres-pascatrauma': features['Gangguan-stres-pascatrauma'],
+            'Skizofrenia': features['Skizofrenia']
+        })
+        # And pick out the movie features and pass them into the movie model,
+        # getting embeddings back.
+        positive_caregiver_embeddings = self.caregiver_model({
+            'Caregiver_Age': features['Caregiver_Age'],
+            'Caregiver_Gender': features['Caregiver_Gender'],
+            'Caregiver-ADHD-Hiperaktif-dan-kurang-fokus': features['Caregiver-ADHD-Hiperaktif-dan-kurang-fokus'],
+            'Caregiver-Depresi': features['Caregiver-Depresi'],
+            'Caregiver-Gangguan-kecemasan': features['Caregiver-Gangguan-kecemasan'],
+            'Caregiver-Gangguan-makan': features['Caregiver-Gangguan-makan'],
+            'Caregiver-Gangguan-stres-pascatrauma': features['Caregiver-Gangguan-stres-pascatrauma'],
+            'Caregiver-Skizofrenia': features['Caregiver-Skizofrenia']
+
+        })
+
+        # The task computes the loss and the metrics.
+
+        return self.task(user_embeddings, positive_caregiver_embeddings, compute_metrics=not training)
 
 caregiver_features = ['Caregiver_Gender', 'Caregiver_Age',  'Caregiver-ADHD-Hiperaktif-dan-kurang-fokus', 'Caregiver-Depresi', 'Caregiver-Gangguan-kecemasan', 'Caregiver-Gangguan-makan', 'Caregiver-Gangguan-stres-pascatrauma', 'Caregiver-Skizofrenia']
 user_features = ['Gender', 'Age', 'ADHD-Hiperaktif-dan-kurang-fokus', 'Depresi', 'Gangguan-kecemasan', 'Gangguan-makan','Gangguan-stres-pascatrauma', 'Skizofrenia']
 
 model = RecomendModel()
-model.load_weights("../resources/Recommender_Weights/recommend")
+model(user_dataframe.iloc[:1].to_dict(orient='records')[0])
+model.load_weights("../resources/Recommender_Weights/recommender.hdf5")
 
 def return_model():
     return [model_nlm_v1,model.user_model,model.caregiver_model]
