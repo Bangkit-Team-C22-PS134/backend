@@ -201,7 +201,7 @@ caregiver_features = ['Caregiver_Gender', 'Caregiver_Age',  'Caregiver-ADHD-Hipe
 user_features = ['Gender', 'Age', 'ADHD-Hiperaktif-dan-kurang-fokus', 'Depresi', 'Gangguan-kecemasan', 'Gangguan-makan','Gangguan-stres-pascatrauma', 'Skizofrenia']
 
 model = RecomendModel()
-model.load_weights("../resources/Recommender_Weights/")
+model.load_weights("../resources/Recommender_Weights/recommend")
 
 def return_model():
     return [model_nlm_v1,model.user_model,model.caregiver_model]
