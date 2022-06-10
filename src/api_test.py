@@ -1,3 +1,4 @@
+
 from flask import Flask, json, request
 from flask_restful import Api, Resource, reqparse, abort
 import threading
@@ -16,6 +17,7 @@ db = firestore.client()
 db_ref_userPref = db.collection('users')
 db_key = db.collection('api_keys').document("matching_setting_api_keys")
 db_chat_room_pref = db.collection('chat_room_pref').where(u'is_open',u'==',True)
+api_key = db_key.get()
 
 # this set up the api resources and request json
 video_post_args = reqparse.RequestParser()
@@ -66,6 +68,9 @@ def abort_if_video_exists(id):
 
 
 def check_api_keys(key):
+    global api_key
+    if(api_key is None):
+        api_key = db_key.get()
     if (api_key != key):
         abort(401, message="Unauthorized Access")
 
@@ -77,6 +82,8 @@ class match_user_resource(Resource):
 
 @app.route("/user/match", methods=["GET"])
 def match_user():
+    if request.method != 'GET':
+        return "405 Method Not Allowed", 405
     # get data from firestore and check if its exist
     user_id = request.args.get("user_id", "notvalid")
     k_value = int(request.args.get("k_value", 3))
@@ -109,8 +116,8 @@ def index():
     :param id: document id of chat_room that need to be updated
     :return: 200 http code
     """
-    return "what"
+    return "This Services is exclusive to out Circle App \n You can find more information on our github"
 
 
 if __name__ == "__main__":
-    app.run(debug=True)  # dont run debug true if its in production
+    app.run(debug=False)  # dont run debug true if its in production
