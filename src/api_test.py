@@ -116,8 +116,8 @@ def index():
     :param id: document id of chat_room that need to be updated
     :return: 200 http code
     """
-    return "This Services is exclusive to out Circle App \n You can find more information on our github"
+    return "This Services is exclusive to our Circle App \n You can find more information on our github"
 
 
 if __name__ == "__main__":
-    app.run(debug=False)  # dont run debug true if its in production
+    app.run(debug=True)  # dont run debug true if its in production

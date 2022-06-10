@@ -32,7 +32,6 @@ from tensorflow import feature_column
 import pathlib
 import os
 
-print(os.getcwd())
 user_dataframe = pd.read_csv("../resources/Data/Combined Data.csv")
 caregiver_dataframe = pd.read_csv("../resources/Data/Processed Caregiver Data.csv")
 
@@ -64,8 +63,8 @@ convert_categorical_data(user_dataframe, col='Caregiver_Tipe_Masalah')
 convert_categorical_data(caregiver_dataframe, col='Caregiver_Tipe_Masalah')
 
 
-user_dataframe.drop(["USER_ID"], 1,inplace=True)
-user_dataframe.drop(["CAREGIVER_ID"], 1,inplace=True)
+user_dataframe.drop(["USER_ID"], axis=1,inplace=True)
+user_dataframe.drop(["CAREGIVER_ID"], axis=1,inplace=True)
 
 user_dataframe.head()
 
@@ -88,7 +87,6 @@ feature_columns = []
 
 number_feature = ["Age"]
 number_feature += unique_masalah_user.tolist()
-print(unique_masalah_caregiver)
 # numeric cols
 for header in number_feature:
     feature_columns.append(feature_column.numeric_column(header))
@@ -107,8 +105,7 @@ for col_name in indicator_column_names:
   indicator_column = feature_column.indicator_column(categorical_column)
   feature_columns.append(indicator_column)
 
-for col in feature_columns:
-    print(col)
+
 
 feature_layer_user= tf.keras.layers.DenseFeatures(feature_columns)
 
@@ -116,7 +113,6 @@ feature_columns = []
 
 number_feature = ["Caregiver_Age"]
 number_feature += unique_masalah_caregiver
-print(unique_masalah_caregiver)
 # numeric cols
 
 for header in number_feature:
@@ -205,12 +201,7 @@ caregiver_features = ['Caregiver_Gender', 'Caregiver_Age',  'Caregiver-ADHD-Hipe
 user_features = ['Gender', 'Age', 'ADHD-Hiperaktif-dan-kurang-fokus', 'Depresi', 'Gangguan-kecemasan', 'Gangguan-makan','Gangguan-stres-pascatrauma', 'Skizofrenia']
 
 model = RecomendModel()
-
-model.compile(optimizer='adam',
-              loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
-              metrics=['accuracy'])
-model.fit(user_ds,
-          epochs=50)
+model.load_weights("../resources/Recommender_Weights/")
 
 def return_model():
     return [model_nlm_v1,model.user_model,model.caregiver_model]
