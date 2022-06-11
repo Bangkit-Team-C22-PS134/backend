@@ -1,4 +1,4 @@
-import pandas as pd
+
 from flask import Flask, json, request
 from flask_restful import Api, Resource, reqparse, abort
 import threading
@@ -9,7 +9,7 @@ import os
 
 app = Flask(__name__)
 api = Api(app)
-
+#json.loads(os.environ["FIREBASE_KEY"] , strict=False)
 # this set up firestore auth and client , also using environment variable to store private key
 cred = credentials.Certificate(json.loads(os.environ["FIREBASE_KEY"] , strict=False))
 default_app = initialize_app(cred)
@@ -40,12 +40,13 @@ def on_snapshot_apikey(doc_snapshot, changes, read_time):
     global api_key
     for doc in doc_snapshot:
         api_key = doc.get("api_key")
-    callback_done_apikey.set()
+    callback_done_chatRoomPrefs.set()
 
 # Create a callback on_snapshot function to capture changes
 def on_snapshot_chatRoomPrefs(doc_snapshot, changes, read_time):
+    print(doc_snapshot)
     Model_Data_Manager.generate_dataframe(doc_snapshot)
-    callback_done_apikey.set()
+    callback_done_chatRoomPrefs.set()
 
 # Watch the document
 doc_watch_apikey = db_key.on_snapshot(on_snapshot_apikey)
@@ -83,7 +84,7 @@ class match_user_resource(Resource):
 @app.route("/user/match", methods=["GET"])
 def match_user():
     if request.method != 'GET':
-        return "Wrong Method"
+        return "405 Method Not Allowed", 405
     # get data from firestore and check if its exist
     user_id = request.args.get("user_id", "notvalid")
     k_value = int(request.args.get("k_value", 3))
@@ -103,7 +104,9 @@ def match_user():
     for k, v in data.items():
         data[k] = [v]
 
-    recommendation = Model_Data_Manager.predict(user_id,data,k_value)
+    recommendation = Model_Data_Manager.predict(user_id, data, k_value)
+    if (type(recommendation) == str):
+        return json.dumps(data), 404
     data = {
         "recommendation": recommendation[0].numpy().tolist()
     }

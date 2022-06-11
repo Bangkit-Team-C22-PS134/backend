@@ -9,7 +9,7 @@ import os
 
 app = Flask(__name__)
 api = Api(app)
-
+#json.loads(os.environ["FIREBASE_KEY"] , strict=False)
 # this set up firestore auth and client , also using environment variable to store private key
 cred = credentials.Certificate("key.json")
 default_app = initialize_app(cred)
@@ -40,12 +40,13 @@ def on_snapshot_apikey(doc_snapshot, changes, read_time):
     global api_key
     for doc in doc_snapshot:
         api_key = doc.get("api_key")
-    callback_done_apikey.set()
+    callback_done_chatRoomPrefs.set()
 
 # Create a callback on_snapshot function to capture changes
 def on_snapshot_chatRoomPrefs(doc_snapshot, changes, read_time):
+    print(doc_snapshot)
     Model_Data_Manager.generate_dataframe(doc_snapshot)
-    callback_done_apikey.set()
+    callback_done_chatRoomPrefs.set()
 
 # Watch the document
 doc_watch_apikey = db_key.on_snapshot(on_snapshot_apikey)
@@ -104,6 +105,8 @@ def match_user():
         data[k] = [v]
 
     recommendation = Model_Data_Manager.predict(user_id,data,k_value)
+    if (type(recommendation) == str):
+        return json.dumps(data), 404
     data = {
         "recommendation": recommendation[0].numpy().tolist()
     }
