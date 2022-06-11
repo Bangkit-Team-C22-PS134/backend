@@ -7,8 +7,8 @@ MAIN_TEXT_MODEL = generate_saved_model.model_nlm_v1
 MAIN_USER_MODEL = generate_saved_model.model.user_model
 MAIN_CAREGIVER_MODEL = generate_saved_model.model.caregiver_model
 
-TEXT_INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_TEXT_MODEL)
-INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_USER_MODEL)
+TEXT_INDEX = tfrs.layers.factorized_top_k.ScaNN(MAIN_TEXT_MODEL)
+INDEX = tfrs.layers.factorized_top_k.ScaNN(MAIN_USER_MODEL)
 
 
 MAIN_DATAFRAME = None

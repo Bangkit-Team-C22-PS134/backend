@@ -9,9 +9,11 @@ tensorflow
 flask_restful
 gunicorn
 firebase_admin
+scann
 tensorflow
 tensorflow_hub
 pandas
 numpy
 datetime
+tensorflow-datasets
 tensorflow_recommenders
