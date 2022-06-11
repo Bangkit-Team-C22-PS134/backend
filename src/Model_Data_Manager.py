@@ -15,7 +15,7 @@ MAIN_DATAFRAME = None
 CAREGIVER_DS_TEXT = None
 
 def generate_dataframe(df_ref_snapshot):
-    global CAREGIVER_DS_TEXT, MAIN_DATAFRAME
+    global CAREGIVER_DS_TEXT, MAIN_DATAFRAME, CAREGIVER_DS_TEXT
     data = circle_utility.unpack_caregiver_snapshot(df_ref_snapshot)
     MAIN_DATAFRAME = circle_utility.convert_caregiver_dictList_to_df(data)
     CAREGIVER_DS_TEXT = circle_utility.df_to_dataset(MAIN_DATAFRAME)
