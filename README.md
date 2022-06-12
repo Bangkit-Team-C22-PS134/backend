@@ -40,3 +40,16 @@ For docker environment , insert Api key as **OS Env variable** with the name `FI
 
 ## Docker build
 Simply build docker image in parent directory of this repository , and ship it using docker run
+
+## How to Use
+Use Get Request to the deployed link with url as follow :
+```
+deployed_link/user/match
+```
+
+with query parameters link with structured as follow:
+```
+user_id='user_id_here'
+k_value='k_value_here'
+```
+
