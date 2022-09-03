@@ -3,12 +3,10 @@ from circle_data_model import circle_utility
 import numpy as np
 import tensorflow_recommenders as tfrs
 
-MAIN_TEXT_MODEL = generate_saved_model.model_nlm_v1
-MAIN_USER_MODEL = generate_saved_model.model.user_model
-MAIN_CAREGIVER_MODEL = generate_saved_model.model.caregiver_model
+
+MAIN_TEXT_MODEL = generate_saved_model.build_model_local()
 
 TEXT_INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_TEXT_MODEL)
-INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_USER_MODEL)
 
 
 MAIN_DATAFRAME = None
@@ -49,26 +47,20 @@ def predict(id, data, k_value):
     #check k value
     if(len(MAIN_DATAFRAME.index) < k_value):
         k_value = len(MAIN_DATAFRAME.index)
-
+    #ini adalah kenapa pentingnya semua harus di dokumentasi dan menggunakan bahasa yang consise dan jelas jidan :)
     TEXT_INDEX.index_from_dataset(
         CAREGIVER_DS_TEXT
     )
-    _, recommendation = TEXT_INDEX(np.array([data['text']]), k=k_value)
+    _, recommendation = TEXT_INDEX(np.array(data['text']), k=k_value)
     temp_data = {
         "recommendation": recommendation[0].numpy().tolist()
     }
+    #ini buat apa ??????
     id_list = list(map(lambda string: string.decode("utf-8").strip(), temp_data['recommendation']))
     new_temp_df = temp_df.iloc[np.where(temp_df.CAREGIVER_ID.isin(id_list))]
     temp_ds = circle_utility.df_to_dataset(new_temp_df)
 
 
-    INDEX.index_from_dataset(
-        temp_ds.map(lambda features: (features['CAREGIVER_ID'], MAIN_CAREGIVER_MODEL(features)) )
-    )
-    # check k value
-    if (len(new_temp_df.index) < k_value):
-        k_value = len(new_temp_df.index)
-    _, recommendation = INDEX(data, k=k_value)
 
     return recommendation
 

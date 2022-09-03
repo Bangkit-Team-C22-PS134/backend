@@ -44,7 +44,6 @@ def on_snapshot_apikey(doc_snapshot, changes, read_time):
 
 # Create a callback on_snapshot function to capture changes
 def on_snapshot_chatRoomPrefs(doc_snapshot, changes, read_time):
-    print(doc_snapshot)
     Model_Data_Manager.generate_dataframe(doc_snapshot)
     callback_done_chatRoomPrefs.set()
 
@@ -61,12 +60,6 @@ def get_error_msg():
 def abort_if_user_id_doesnt_exist(data):
     if (not data.exists):
         abort(404, message="Could not find the user...")
-
-
-def abort_if_video_exists(id):
-    if (db_ref_userPref.document(id).get().exists):
-        abort(409, message="Video already exists with that ID...")
-
 
 def check_api_keys(key):
     global api_key
