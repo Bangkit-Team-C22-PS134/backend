@@ -136,3 +136,4 @@ src/env_secret.py
 src/.env
 src/key.json
 src/key.json.json
+resources/Model/
