@@ -156,3 +156,31 @@ def convert_user_dictList_to_df(dictionary):
     fill_non_existent_column(df, is_caregiver=False)
     return df
 
+
+
+def turn_firestore_vector_to_df(firestore_documents, identifiers: str, feature: str,):
+    """
+    :param firestore_documents: list of firestore documents
+    :param identifiers: identifier name , this is usually a room id
+    :param feature: feature name , i usually use vector as a name
+    :return: DataFrame
+    """
+    firestore_documents_dict_unpacked = map(lambda document: Merge(document.to_dict(), {identifiers: document.id}),
+                                            firestore_documents)
+    firestore_documents_dict_unpacked = map(lambda document: Merge(document[feature], {identifiers: document[identifiers]}),
+                                            firestore_documents_dict_unpacked)
+    firestore_documents_dict_unpacked = [turn_vector_to_df(element, identifiers, feature) for element in
+                                         list(firestore_documents_dict_unpacked)]
+    return pd.DataFrame.from_dict(list(firestore_documents_dict_unpacked))
+
+
+def turn_vector_to_df(dictionary, identifiers: str, feature: str, minus=1, ):
+    data_list = list()
+    # -1 because theres 1 item thats not a vector,
+    for i in range(len(dictionary.keys()) - minus):
+        data_list.append(np.float32(dictionary[f"{i}"]))
+
+    data_result = {identifiers:dictionary[identifiers], feature : np.array(data_list)}
+
+    return data_result
+

@@ -76,10 +76,11 @@ class match_user_resource(Resource):
 
 @app.route("/user/match", methods=["GET"])
 def match_user():
+
     if request.method != 'GET':
         return "405 Method Not Allowed", 405
     # get data from firestore and check if its exist
-    user_id = request.args.get("user_id", "notvalid")
+    user_id = request.args.get("user_id", None)
     k_value = int(request.args.get("k_value", 3))
     if (user_id is None):
         return "id is not provided", 400
@@ -97,9 +98,11 @@ def match_user():
     for k, v in data.items():
         data[k] = [v]
 
-    recommendation = Model_Data_Manager.predict(user_id,data,k_value)
+    recommendation = Model_Data_Manager.predict(data["text"][0],k_value)
+
     if (type(recommendation) == str):
-        return json.dumps(data), 404
+        return json.dumps(recommendation), 404
+
     data = {
         "recommendation": recommendation[0].numpy().tolist()
     }

@@ -1,65 +1,40 @@
-from circle_data_model import generate_saved_model
+
 from circle_data_model import circle_utility
-import numpy as np
-import tensorflow_recommenders as tfrs
+from circle_data_model import Recommender
 
-
-MAIN_TEXT_MODEL = generate_saved_model.build_model_local()
-
-TEXT_INDEX = tfrs.layers.factorized_top_k.BruteForce(MAIN_TEXT_MODEL)
-
-
-MAIN_DATAFRAME = None
-CAREGIVER_DS_TEXT = None
+#this need to change if its docker
+Recommender = Recommender.RecommenderEngine()
+identifier = "room_id"
+feature = "vector"
 
 def generate_dataframe(df_ref_snapshot):
-    global CAREGIVER_DS_TEXT, MAIN_DATAFRAME, CAREGIVER_DS_TEXT
     if (len(df_ref_snapshot)==0):
-        MAIN_DATAFRAME = None
-        CAREGIVER_DS_TEXT = None
+        raise Exception("Data is empty")
         return 1
-    data = circle_utility.unpack_caregiver_snapshot(df_ref_snapshot)
-    MAIN_DATAFRAME = circle_utility.convert_caregiver_dictList_to_df(data)
-    CAREGIVER_DS_TEXT = circle_utility.df_to_dataset(MAIN_DATAFRAME)
-    CAREGIVER_DS_TEXT = CAREGIVER_DS_TEXT.map(lambda features: (features['CAREGIVER_ID'], MAIN_TEXT_MODEL(features['text'])))
+
+    data = circle_utility.turn_firestore_vector_to_df(df_ref_snapshot, identifier, feature)
+    Recommender.generate_index(data, feature, identifier)
     return 0
-
-def generate_ds(df):
-    pass
-
-def update_processed_dataframe(df_ref_snapshot):
-    pass
 
 def update_existing_df():
     pass
 
-def predict(id, data, k_value):
+def predict(text:str, k_value):
     try:
-        if (MAIN_DATAFRAME.empty):
+        if (Recommender.index_data is None):
             return "empty query"
-        if(CAREGIVER_DS_TEXT == None):
-            return "caregiver none !"
     except Exception as e:
-        return "something wrong"
+        raise e
 
-    query_string = f'user_id!="{id}"'
-    temp_df = MAIN_DATAFRAME.query(query_string)
+
     #check k value
-    if(len(MAIN_DATAFRAME.index) < k_value):
-        k_value = len(MAIN_DATAFRAME.index)
-    #ini adalah kenapa pentingnya semua harus di dokumentasi dan menggunakan bahasa yang consise dan jelas jidan :)
-    TEXT_INDEX.index_from_dataset(
-        CAREGIVER_DS_TEXT
-    )
-    _, recommendation = TEXT_INDEX(np.array(data['text']), k=k_value)
-    temp_data = {
-        "recommendation": recommendation[0].numpy().tolist()
-    }
-    #ini buat apa ??????
-    id_list = list(map(lambda string: string.decode("utf-8").strip(), temp_data['recommendation']))
-    new_temp_df = temp_df.iloc[np.where(temp_df.CAREGIVER_ID.isin(id_list))]
-    temp_ds = circle_utility.df_to_dataset(new_temp_df)
+    data_len = len(Recommender.index_data)
+    if(data_len < k_value):
+        k_value = data_len
 
+
+    #ini adalah kenapa pentingnya semua harus di dokumentasi dan menggunakan bahasa yang consise dan jelas jidan :)
+    recommendation = Recommender.predict(text, k_value=k_value)
 
 
     return recommendation
