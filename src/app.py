@@ -9,9 +9,9 @@ import os
 
 app = Flask(__name__)
 api = Api(app)
-json.loads(os.environ["FIREBASE_KEY"] , strict=False)
+key = json.loads(os.environ["FIREBASE_KEY"] , strict=False)
 # this set up firestore auth and client , also using environment variable to store private key
-cred = credentials.Certificate("key.json")
+cred = credentials.Certificate(key)
 default_app = initialize_app(cred)
 db = firestore.client()
 db_ref_userPref = db.collection('users')
