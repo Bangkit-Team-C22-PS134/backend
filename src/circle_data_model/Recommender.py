@@ -97,7 +97,7 @@ class RecommenderEngine(metaclass=SingletonMeta):
 
     def build_model(self):
         "Return Hub nnlm-id-dim128 model"
-        hub_layer = hub.KerasLayer("https://tfhub.dev/google/nnlm-id-dim128/2", output_shape=[50],
+        hub_layer = hub.KerasLayer("https://tfhub.dev/google/nnlm-id-dim128/2", output_shape=[128],
                                    input_shape=[], dtype=tf.string)
         return hub_layer
 
