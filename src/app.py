@@ -11,12 +11,14 @@ app = Flask(__name__)
 api = Api(app)
 json.loads(os.environ["FIREBASE_KEY"] , strict=False)
 # this set up firestore auth and client , also using environment variable to store private key
-cred = credentials.Certificate(json.loads(os.environ["FIREBASE_KEY"] , strict=False))
+cred = credentials.Certificate("key.json")
 default_app = initialize_app(cred)
 db = firestore.client()
 db_ref_userPref = db.collection('users')
 db_key = db.collection('api_keys').document("matching_setting_api_keys")
 db_chat_room_pref = db.collection('chat_room_pref').where(u'is_open',u'==',True)
+#initialize initial index
+Model_Data_Manager.add_data_in_dataframe(db_chat_room_pref.get())
 api_key = db_key.get()
 
 # this set up the api resources and request json
@@ -42,19 +44,23 @@ def on_snapshot_apikey(doc_snapshot, changes, read_time):
         api_key = doc.get("api_key")
     callback_done_chatRoomPrefs.set()
 
+#this variable to ensure that only happen once in 1 instance
+cold_boot = True
 # Create a callback on_snapshot function to capture changes
 def on_snapshot_chatRoomPrefs(doc_snapshot, changes, read_time):
+    global cold_boot
     print(u'Callback received query snapshot.')
-    print(u'Current cities in California: ')
     for change in changes:
-        if change.type.name == 'ADDED':
-            Model_Data_Manager.update_dataframe(change.document)
-            print(f'New city: {change.document.id}')
+        if change.type.name == 'ADDED' and not cold_boot:
+            Model_Data_Manager.add_data_in_dataframe(change.document)
+            print(f'New data: {change.document.id}')
         elif change.type.name == 'MODIFIED':
             Model_Data_Manager.update_dataframe(change.document)
-            print(f'Modified city: {change.document.id}')
+            print(f'Modified data: {change.document.id}')
         elif change.type.name == 'REMOVED':
-            print(f'Removed city: {change.document.id}')
+            Model_Data_Manager.delete_data_in_dataframe(change.document)
+            print(f'Removed data: {change.document.id}')
+    cold_boot = False
     callback_done_chatRoomPrefs.set()
 
 # Watch the document
@@ -86,13 +92,17 @@ class match_user_resource(Resource):
 
 @app.route("/user/match", methods=["GET"])
 def match_user():
+
     if request.method != 'GET':
         return "405 Method Not Allowed", 405
     # get data from firestore and check if its exist
-    user_id = request.args.get("user_id", "notvalid")
+    user_id = request.args.get("user_id", None)
+    text = request.args.get("text", None)
     k_value = int(request.args.get("k_value", 3))
     if (user_id is None):
         return "id is not provided", 400
+    if (text is None):
+        return "text is not provided, it should be provided as url parameters", 400
 
     check_api_keys(request.headers.get('user-api-key'))
     data = db_ref_userPref.document(str(user_id)).get()
@@ -106,10 +116,11 @@ def match_user():
     data = data.to_dict('records')[0]
     for k, v in data.items():
         data[k] = [v]
+    recommendation = Model_Data_Manager.predict(text,k_value)
 
-    recommendation = Model_Data_Manager.predict(user_id, data, k_value)
     if (type(recommendation) == str):
-        return json.dumps(data), 404
+        return json.dumps(recommendation), 404
+
     data = {
         "recommendation": recommendation[0].numpy().tolist()
     }
@@ -126,4 +137,4 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=False)  # dont run debug true if its in production
+    app.run(debug=True)  # dont run debug true if its in production

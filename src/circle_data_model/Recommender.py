@@ -57,7 +57,7 @@ class RecommenderEngine(metaclass=SingletonMeta):
 
     def __init__(self) -> None:
 
-        self.model = self.build_model_local()
+        self.model = self.build_model()
         try:
             # ScaNN is an optional dependency, and might not be present.
             from scann import scann_ops
