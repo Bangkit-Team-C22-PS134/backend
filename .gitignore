@@ -132,7 +132,7 @@ dmypy.json
 !/src/.env
 *.py
 src/env_secret_setup.py
-src/env_secret.py
+src/stress_test.py
 src/.env
 src/key.json
 src/key.json.json

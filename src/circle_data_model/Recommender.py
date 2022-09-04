@@ -51,7 +51,6 @@ class RecommenderEngine(metaclass=SingletonMeta):
     """
     model = None
     index = None
-    index_data = None
     """
     We'll use this property to prove that our Singleton really works.
     """
@@ -79,16 +78,12 @@ class RecommenderEngine(metaclass=SingletonMeta):
         :param identifier: identifier merupakan nama kolom dari rows candidate tersebut
         :return: None
         """
-        self.index_data = data
         self.index.index(np.array(data[feature].tolist()), data[identifier])
         return 0
 
     def generate_index_from_ds(self, ds, feature: str, identifier: str):
         raise Exception("Belum di implementasi")
         return 0
-
-    def update_index(self, new_data):
-        return
 
     def build_model_local(self):
         """
@@ -117,7 +112,7 @@ class RecommenderEngine(metaclass=SingletonMeta):
         """
 
         #check apakah index data sudah di buat
-        if(self.index_data is None):
+        if(self.index is None):
             raise Exception("Index belum di inisialiasasi")
         if exception is None:
             _, recommendation = self.index(np.array([text]), k=k_value)

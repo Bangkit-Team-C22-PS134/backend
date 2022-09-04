@@ -44,7 +44,17 @@ def on_snapshot_apikey(doc_snapshot, changes, read_time):
 
 # Create a callback on_snapshot function to capture changes
 def on_snapshot_chatRoomPrefs(doc_snapshot, changes, read_time):
-    Model_Data_Manager.generate_dataframe(doc_snapshot)
+    print(u'Callback received query snapshot.')
+    print(u'Current cities in California: ')
+    for change in changes:
+        if change.type.name == 'ADDED':
+            Model_Data_Manager.update_dataframe(change.document)
+            print(f'New city: {change.document.id}')
+        elif change.type.name == 'MODIFIED':
+            Model_Data_Manager.update_dataframe(change.document)
+            print(f'Modified city: {change.document.id}')
+        elif change.type.name == 'REMOVED':
+            print(f'Removed city: {change.document.id}')
     callback_done_chatRoomPrefs.set()
 
 # Watch the document
