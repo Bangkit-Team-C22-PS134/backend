@@ -127,6 +127,15 @@ def match_user():
     data = list(map(lambda string: string.decode("utf-8").strip(), data['recommendation']))
     return json.dumps(data), 200
 
+
+@app.route("/room/create", methods=["POST"])
+def create_room():
+    if request.method != 'POST':
+        return "405 Method Not Allowed", 405
+    room_data = request.form
+
+    return 200
+
 @app.route("/")
 def index():
     """
