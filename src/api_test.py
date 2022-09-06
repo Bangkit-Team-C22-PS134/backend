@@ -133,7 +133,7 @@ def create_room():
     if request.method != 'POST':
         return "405 Method Not Allowed", 405
     room_data = request.form
-
+    print(room_data)
     return 200
 
 @app.route("/")
