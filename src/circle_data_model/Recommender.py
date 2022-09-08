@@ -40,8 +40,6 @@ class SingletonMeta(type):
                 cls._instances[cls] = instance
         return cls._instances[cls]
 
-
-
 class RecommenderEngine(metaclass=SingletonMeta):
     """
     RecommenderEngine merupakan singleton yang akan menjadi search engine utama dalam aplikasi ini
@@ -66,7 +64,6 @@ class RecommenderEngine(metaclass=SingletonMeta):
         except ImportError:
             _HAVE_SCANN = False
             self.index = tfrs.layers.factorized_top_k.BruteForce(self.model)
-        print("INI SINGLE TON")
 
 
     def generate_index(self, data: pd.DataFrame, feature: str, identifier: str):

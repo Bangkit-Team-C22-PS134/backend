@@ -16,6 +16,7 @@ default_app = initialize_app(cred)
 db = firestore.client()
 db_ref_userPref = db.collection('users')
 db_key = db.collection('api_keys').document("matching_setting_api_keys")
+db_room = db.collection('chat_room_pref')
 db_chat_room_pref = db.collection('chat_room_pref').where(u'is_open',u'==',True)
 #initialize initial index
 Model_Data_Manager.add_data_in_dataframe(db_chat_room_pref.get())
@@ -84,6 +85,11 @@ def check_api_keys(key):
     if (api_key != key):
         abort(401, message="Unauthorized Access")
 
+def check_authorization(id, method=["GET"]):
+
+    return True
+
+
 class match_user_resource(Resource):
     def get(self, id):
         # mulai processing metode get
@@ -99,12 +105,12 @@ def match_user():
     user_id = request.args.get("user_id", None)
     text = request.args.get("text", None)
     k_value = int(request.args.get("k_value", 3))
+
     if (user_id is None):
         return "id is not provided", 400
     if (text is None):
         return "text is not provided, it should be provided as url parameters", 400
-
-    check_api_keys(request.headers.get('user-api-key'))
+    check_api_keys(request.headers.get('api-key'))
     data = db_ref_userPref.document(str(user_id)).get()
     abort_if_user_id_doesnt_exist(data)
 
@@ -130,11 +136,32 @@ def match_user():
 
 @app.route("/room/create", methods=["POST"])
 def create_room():
+    """
+    Route ini digunakan untuk menerima data dari form post request, dan akan dimasukkan kedalam firebase store
+    perlu url user_id
+    :return: return code
+    """
     if request.method != 'POST':
         return "405 Method Not Allowed", 405
-    room_data = request.form
-    print(room_data)
-    return 200
+
+    user_id = request.args.get("user_id", None)
+    if (user_id is None):
+        return "id is not provided", 400
+
+    #mengubah data form dari multidict menjadi dict
+    room_data = request.form.to_dict()
+
+    if "text" not in room_data:
+        return "Text is not in data form", 400
+
+    #ini mengubah text menjadi vector menggunakan model data manager
+    vector = Model_Data_Manager.turn_text_to_vector(room_data["text"])
+    room_data["vector"] = circle_utility.convert_vector_to_dict(vector)
+
+    db_room.add(room_data)
+
+
+    return "Data added !", 200
 
 @app.route("/")
 def index():
