@@ -21,7 +21,7 @@ def add_data_in_dataframe(df_ref_snapshot):
         return 1
 
     temp = circle_utility.turn_firestore_vector_to_df(df_ref_snapshot, identifier, feature)
-    main_dataframe = main_dataframe.append(temp)
+    main_dataframe = pandas.concat([main_dataframe , temp])
 
     Recommender.generate_index(main_dataframe, feature, identifier)
     return 0

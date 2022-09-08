@@ -1,7 +1,7 @@
 From python:3.9.11
 
-COPY src/ app/src/
-COPY resources/ app/resources/
+COPY src/ src/
+COPY resources/ resources/
 COPY requirements.txt .
 
 RUN pip install --upgrade cython
@@ -11,7 +11,7 @@ RUN pip install pandas
 RUN pip3 install pandas
 
 
-WORKDIR /app/src
+WORKDIR /src
 
 ENV PORT 8080
 
