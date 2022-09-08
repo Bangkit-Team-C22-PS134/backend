@@ -67,6 +67,9 @@ def check_if_snapshot_isinList(snapshot):
     else:
         return [snapshot]
 
+def turn_text_to_vector(text: str):
+    vector = Recommender.model([text])
+    return vector
 
 def predict(text:str, k_value):
     try:

@@ -156,7 +156,12 @@ def convert_user_dictList_to_df(dictionary):
     fill_non_existent_column(df, is_caregiver=False)
     return df
 
-
+def convert_vector_to_dict(vector):
+    data_dict = dict()
+    vector = vector.numpy()
+    for index, value in enumerate(vector[0]):
+        data_dict[f"{index}"] = value.item()
+    return data_dict
 
 def turn_firestore_vector_to_df(firestore_documents, identifiers: str, feature: str,):
     """
