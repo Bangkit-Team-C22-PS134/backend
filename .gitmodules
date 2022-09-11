@@ -1,0 +1,3 @@
+[submodule "search_semantic"]
+	path = search_semantic
+	url = https://github.com/Bangkit-Team-C22-PS134/search_semantic
